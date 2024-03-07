@@ -1,4 +1,5 @@
 import {
+  Container,
   Paper,
   Stack,
   Table,
@@ -7,19 +8,20 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { WEEKDAYS } from "../../constants";
 import { ReactNode } from "react";
-import { createMonthTableColumns } from "../../utils/dateTable";
-
-const columns = createMonthTableColumns(WEEKDAYS);
 
 export type MonthProps = {
   rows: ReactNode[];
+  columns: ReactNode[];
+  label: string;
 };
 
-export const Month = ({ rows }: MonthProps) => {
+export const Month = ({ rows, columns, label }: MonthProps) => {
   return (
     <Stack>
+      <Container sx={{ textAlign: "center", marginBottom: "8px" }}>
+        {label.toUpperCase()}
+      </Container>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 350, minHeight: 250 }} aria-label="simple table">
           <TableHead>

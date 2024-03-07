@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { MainHeader } from "../features/main-header/MainHeader";
 import { useDispatch } from "react-redux";
-import { createYear } from "../features/years/store/slice";
+import { createYear } from "../features/scheduler/store/slice";
 
 export const Main = () => {
   const dispatch = useDispatch();

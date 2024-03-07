@@ -10,7 +10,7 @@ export type Day = {
   isWeekend?: boolean;
   isHoliday?: boolean;
   isSelected?: boolean;
-  weekday?: Weekdays;
+  weekday: Weekdays;
   holiday?: Holiday;
 };
 

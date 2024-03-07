@@ -2,6 +2,7 @@ import { TableCell, TableRow } from "@mui/material";
 import { numberOfDaysPerWeek } from "../constants";
 import { ReactNode } from "react";
 import { DayContainer } from "../components/day-container";
+import { Day } from "../types";
 
 export const getEmptyDays = (dayOfWeek: number) => {
   return [...new Array(numberOfDaysPerWeek)].reduce((acc, _, index) => {
@@ -10,80 +11,61 @@ export const getEmptyDays = (dayOfWeek: number) => {
   }, []);
 };
 
-const createListOfDays = (days: number) => {
-  return new Array(days).fill("_").map((_, index) => (index + 1).toString());
-};
-
-export const fillMonthDays = (
-  emptyDays: string[],
-  days: number,
-  month: number
-) => {
-  const listOfDays = createListOfDays(days);
-
+export const fillMonthDays = (emptyDays: string[], days: Day[]) => {
   let counter = 0;
-  let numberOfWeek = 1;
   let week: ReactNode[] = [];
+  let numberOfWeek = 1;
 
   emptyDays.forEach((_, index) => {
-    week.push(
-      <DayContainer
-        id={(index * 30).toString()}
-        sx={{ cursor: "unset" }}
-      ></DayContainer>
-    );
+    week.push(<TableCell id={(index * 30).toString()}></TableCell>);
     counter += 1;
   });
 
-  const allDays: ReactNode[] = listOfDays.reduce(
-    (acc: ReactNode[], item, index) => {
-      if (counter < numberOfDaysPerWeek) {
-        week.push(
-          <DayContainer className="day" id={item + "/" + month.toString()}>
-            {item}
-          </DayContainer>
-        );
-        counter += 1;
+  const allDays: ReactNode[] = days?.reduce((acc: ReactNode[], item, index) => {
+    if (counter < numberOfDaysPerWeek) {
+      week.push(
+        <DayContainer className="day" id={item.date}>
+          {new Date(item.date).getDate()}
+        </DayContainer>
+      );
 
-        if (index + 1 === days) {
-          [...new Array(numberOfDaysPerWeek - 1 - counter)].forEach((_, i) => {
-            week.push(
-              <TableCell
-                key={index + i + 1}
-                sx={{ padding: "8px" }}
-              ></TableCell>
-            );
-          });
-          acc.push(
-            <TableRow
-              key={numberOfWeek}
-              sx={{
-                "&:last-child td, &:last-child th": {
-                  border: 0,
-                },
-              }}
-            >
-              {week}
-            </TableRow>
+      counter += 1;
+      if (index + 1 === days.length && numberOfDaysPerWeek > counter) {
+        [...new Array(numberOfDaysPerWeek - 1 - counter)].forEach((_, i) => {
+          week.push(
+            <TableCell key={index * i + 1} sx={{ padding: "8px" }}></TableCell>
           );
-        }
-      } else {
+        });
+
         acc.push(
           <TableRow
             key={numberOfWeek}
-            sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+            sx={{
+              "&:last-child td, &:last-child th": {
+                border: 0,
+              },
+            }}
           >
             {week}
           </TableRow>
         );
-        week = [];
-        numberOfWeek += 1;
-        counter = 0;
       }
-      return acc;
-    },
-    []
-  );
+    }
+    if (counter === numberOfDaysPerWeek) {
+      acc.push(
+        <TableRow
+          key={numberOfWeek}
+          sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+        >
+          {week}
+        </TableRow>
+      );
+      week = [];
+      numberOfWeek += 1;
+      counter = 0;
+    }
+    return acc;
+  }, []);
   return allDays;
 };
 
