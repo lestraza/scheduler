@@ -12,5 +12,5 @@ const HeaderWrapper = styled(Stack)`
 `;
 
 export const Header = ({ children }: HeaderProps) => {
-  return <HeaderWrapper direction={"row"}>{children}</HeaderWrapper>;
+  return <HeaderWrapper direction="row">{children}</HeaderWrapper>;
 };

@@ -7,7 +7,7 @@ import { colors } from "../../shared/styles";
 import styled from "@emotion/styled";
 
 const StyledMenuIcon = styled(MenuIcon)`
-  fill: ${(props) => colors.grey.main};
+  fill: ${colors.grey.main};
 `;
 
 const IconButton = styled(MUIIconButton)`
@@ -17,17 +17,17 @@ const IconButton = styled(MUIIconButton)`
 export const MainHeader = () => {
   return (
     <Header>
-      <Stack direction="row" gap={"8px"}>
+      <Stack direction="row" gap="8px">
         <IconButton>
           <StyledMenuIcon />
         </IconButton>
-        <Stack alignSelf={"center"} fontSize={"1.2rem"}>
+        <Stack alignSelf="center" fontSize="1.2rem">
           Calendar
         </Stack>
       </Stack>
       <Stack direction="row">
         <Button variant="text">Today</Button>
-        <Stack direction={"row"} minWidth={"80px"}>
+        <Stack direction="row" minWidth="80px">
           <IconButton>
             <ChevronLeftIcon fill={colors.grey.main} />
           </IconButton>
@@ -36,7 +36,7 @@ export const MainHeader = () => {
           </IconButton>
         </Stack>
       </Stack>
-      <Stack alignSelf={"center"}>2024</Stack>
+      <Stack alignSelf="center">2024</Stack>
     </Header>
   );
 };

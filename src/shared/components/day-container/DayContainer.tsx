@@ -2,6 +2,12 @@ import styled from "@emotion/styled";
 import { Stack as MUIStack, StackProps, TableCell } from "@mui/material";
 import { PropsWithChildren } from "react";
 
+type CustomStackProps = {
+  id?: string;
+  onClick?: (id: string) => void;
+} & PropsWithChildren &
+  StackProps;
+
 export const CustomStack = styled(MUIStack)`
   cursor: pointer;
   font-size: 0.725rem;
@@ -19,8 +25,7 @@ export const DayContainer = ({
   id,
   onClick,
   ...rest
-}: { id?: string; onClick?: (id: string) => void } & PropsWithChildren &
-  StackProps) => {
+}: CustomStackProps) => {
   const onHandleClick = () => {
     onClick?.(id || "");
   };
