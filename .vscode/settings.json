@@ -1,0 +1,5 @@
+{
+    "javascript.preferences.jsxAttributeCompletionStyle": "none",
+    "typescript.preferences.jsxAttributeCompletionStyle": "none",
+    "typescript.preferences.quoteStyle": "double"
+}
