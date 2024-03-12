@@ -11,8 +11,8 @@ import {
 import { ReactNode } from "react";
 
 export type MonthProps = {
-  rows: ReactNode[];
-  columns: ReactNode[];
+  rows: ReactNode;
+  columns: ReactNode;
   label: string;
 };
 
