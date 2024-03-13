@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { MainHeader } from "../features/main-header/MainHeader";
+import { MainHeader } from "../features/main-header/components/MainHeader";
 import { useDispatch } from "react-redux";
 import { createYear } from "../features/scheduler/store/slice";
 

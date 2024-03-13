@@ -23,7 +23,10 @@ export const Month = ({ rows, columns, label }: MonthProps) => {
         {label.toUpperCase()}
       </Container>
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 350, minHeight: 250 }} aria-label="simple table">
+        <Table
+          sx={{ minWidth: "xs", minHeight: 250 }}
+          aria-label="simple table"
+        >
           <TableHead>
             <TableRow>{columns}</TableRow>
           </TableHead>

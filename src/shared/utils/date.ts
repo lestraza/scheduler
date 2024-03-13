@@ -1,5 +1,5 @@
 import { numberOfDaysPerWeek } from "../constants";
-import { Day, Month, Year } from "../types";
+import { Day, Month, Year } from "../types/date";
 import { Months, Weekdays } from "../types/dateEnums";
 import {
   isHoliday as checkIfHoliday,

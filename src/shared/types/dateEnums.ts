@@ -22,3 +22,8 @@ export enum Weekdays {
   "Friday" = "Friday",
   "Saturday" = "Saturday",
 }
+
+export enum CalendarView {
+  "Year" = "Year",
+  "Month" = "Month",
+}
