@@ -1,24 +1,23 @@
+import { useCallback } from "react";
+import { useDispatch } from "react-redux";
 import {
   Button,
   IconButton as MUIIconButton,
   MenuItem,
   Stack,
 } from "@mui/material";
-import { Header } from "../../../shared/components/header/Header";
+import styled from "@emotion/styled";
+import { Select, Header } from "../../../shared/components";
 import { ReactComponent as MenuIcon } from "../../../shared/icons/menu.svg";
 import { ReactComponent as ChevronLeftIcon } from "../../../shared/icons/chevron_left.svg";
 import { ReactComponent as ChevronRightIcon } from "../../../shared/icons/chevron_right.svg";
 import { colors } from "../../../shared/styles";
-import styled from "@emotion/styled";
 
-import { useCallback, useMemo } from "react";
-import { useDispatch } from "react-redux";
 import { useAppSelector, yearsSlice } from "../../scheduler/store";
 import { CalendarView } from "../../../shared/types";
-import { Select } from "../../../shared/components/select/Select";
 
 const StyledMenuIcon = styled(MenuIcon)`
-  fill: ${() => colors.grey.main};
+  fill: ${colors.grey.main};
 `;
 
 const IconButton = styled(MUIIconButton)`
@@ -36,29 +35,19 @@ export const MainHeader = () => {
     [dispatch]
   );
 
-  const calendarViewOptions = useMemo(() => {
-    return Object.keys(CalendarView).map((key) => {
-      return (
-        <MenuItem value={key} key={key}>
-          {key}
-        </MenuItem>
-      );
-    });
-  }, []);
-
   return (
     <Header>
-      <Stack direction="row" gap={"8px"}>
+      <Stack direction="row" gap="8px">
         <IconButton>
           <StyledMenuIcon />
         </IconButton>
-        <Stack alignSelf={"center"} fontSize={"1.2rem"}>
+        <Stack alignSelf="center" fontSize="1.2rem">
           Calendar
         </Stack>
       </Stack>
       <Stack direction="row">
         <Button variant="text">Today</Button>
-        <Stack direction={"row"} minWidth={"80px"}>
+        <Stack direction="row" minWidth="80px">
           <IconButton>
             <ChevronLeftIcon fill={colors.grey.main} />
           </IconButton>
@@ -67,14 +56,20 @@ export const MainHeader = () => {
           </IconButton>
         </Stack>
       </Stack>
-      <Stack alignSelf={"center"}>2024</Stack>
+      <Stack alignSelf="center">2024</Stack>
       <Stack direction="row">
         <Select
           onSelectOption={onSetCalendarViewTab}
           variant="standard"
           value={tab}
         >
-          {calendarViewOptions}
+          {Object.keys(CalendarView).map((key) => {
+            return (
+              <MenuItem value={key} key={key}>
+                {key}
+              </MenuItem>
+            );
+          })}
         </Select>
       </Stack>
     </Header>
