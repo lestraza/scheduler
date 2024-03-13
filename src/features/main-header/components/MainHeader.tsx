@@ -27,6 +27,7 @@ const IconButton = styled(MUIIconButton)`
 export const MainHeader = () => {
   const dispatch = useDispatch();
   const tab = useAppSelector((state) => state.yearsReducer.calendarViewTab);
+  const currentYear = useAppSelector((state) => state.yearsReducer.currentYear);
 
   const onSetCalendarViewTab = useCallback(
     (value: string) => {
@@ -56,7 +57,7 @@ export const MainHeader = () => {
           </IconButton>
         </Stack>
       </Stack>
-      <Stack alignSelf="center">2024</Stack>
+      <Stack alignSelf="center">{currentYear}</Stack>
       <Stack direction="row">
         <Select
           onSelectOption={onSetCalendarViewTab}

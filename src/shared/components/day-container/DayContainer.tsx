@@ -30,7 +30,7 @@ export const DayContainer = ({
     onClick?.(id || "");
   };
   return (
-    <TableCell key={id} sx={{ padding: "8px" }} onClick={onHandleClick}>
+    <TableCell sx={{ padding: "8px" }} onClick={onHandleClick}>
       <CustomStack {...rest}>{children}</CustomStack>
     </TableCell>
   );

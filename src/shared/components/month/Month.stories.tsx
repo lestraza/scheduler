@@ -9,7 +9,7 @@ import {
 } from "../../../features/scheduler/components";
 
 const year = 2024;
-const month = 4;
+const month = 2;
 const months = Object.keys(Months);
 
 const firstWeekDayOfMonth = getFirstWeekDayOfMonth(year, month);
