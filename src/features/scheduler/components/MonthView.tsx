@@ -7,10 +7,9 @@ import { SchedulerMonthColumns } from "./SchedulerMonthColumns";
 import { Months, Weekdays } from "../../../shared/types";
 
 export const MonthView = () => {
-  const displayedMonth = useAppSelector(
-    (state) => state.yearsReducer.displayedMonth
+  const { currentYear, displayedMonth } = useAppSelector(
+    ({ yearsReducer }) => yearsReducer
   );
-  const currentYear = useAppSelector((state) => state.yearsReducer.currentYear);
   const firstWeekDayOfMonth = getFirstWeekDayOfMonth(
     currentYear,
     displayedMonth
