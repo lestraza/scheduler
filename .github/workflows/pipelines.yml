@@ -13,7 +13,6 @@ jobs:
         with:
           node-version: '16'
       - run: npm install 
-jobs:
   build:
     runs-on: ubuntu-latest
     steps:
