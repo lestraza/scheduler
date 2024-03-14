@@ -13,7 +13,6 @@ jobs:
         with:
           node-version: '16'
       - run: npm install 
-jobs:
   build:
     runs-on: ubuntu-latest
     steps:
@@ -21,4 +20,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '16'
+      - run: npm install react-scripts
       - run: npm run build 
