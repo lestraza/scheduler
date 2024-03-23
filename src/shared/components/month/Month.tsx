@@ -22,14 +22,14 @@ const TableWrapper = styled(Stack)`
 export type MonthProps = {
   rows: ReactNode;
   columns: ReactNode;
-  label?: string;
+  label: string;
 } & TableProps;
 
 export const Month = ({ rows, columns, label, className }: MonthProps) => {
   return (
     <TableWrapper className={className}>
       <Container sx={{ textAlign: "center", marginBottom: "8px" }}>
-        {label?.toUpperCase()}
+        {label.toUpperCase()}
       </Container>
       <TableContainer component={Paper}>
         <Table sx={{ minHeight: 250 }} aria-label="simple table">
