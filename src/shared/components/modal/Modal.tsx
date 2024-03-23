@@ -9,7 +9,7 @@ type ModalProps = {
   isEdit?: boolean;
 } & DialogProps;
 
-const ModalComponent = styled(Dialog)(({ theme }) => ({
+const ModalComponent = styled(Dialog)(() => ({
   "& .MuiPaper-root.MuiDialog-paper": {
     paddingTop: "50px",
   },
