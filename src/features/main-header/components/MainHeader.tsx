@@ -38,24 +38,21 @@ export const MainHeader = () => {
     [dispatch]
   );
 
-  const onSetDisplayedMonth = useCallback(
-    (value: IncDec) => {
-      if (value === IncDec.Inc) {
-        const month = displayedMonth === 11 ? 0 : displayedMonth + 1;
-        dispatch(yearsSlice.actions.setDisplayedMonth(month));
-        if (month === 0) {
-          dispatch(yearsSlice.actions.setDispayedYear(displayedYear + 1));
-        }
-      } else {
-        const month = displayedMonth === 0 ? 11 : displayedMonth - 1;
-        dispatch(yearsSlice.actions.setDisplayedMonth(month));
-        if (month === 11) {
-          dispatch(yearsSlice.actions.setDispayedYear(displayedYear - 1));
-        }
+  const onSetDisplayedMonth = (value: IncDec) => {
+    if (value === IncDec.Inc) {
+      const month = displayedMonth === 11 ? 0 : displayedMonth + 1;
+      dispatch(yearsSlice.actions.setDisplayedMonth(month));
+      if (month === 0) {
+        dispatch(yearsSlice.actions.setDispayedYear(displayedYear + 1));
       }
-    },
-    [dispatch, displayedMonth, displayedYear]
-  );
+    } else {
+      const month = displayedMonth === 0 ? 11 : displayedMonth - 1;
+      dispatch(yearsSlice.actions.setDisplayedMonth(month));
+      if (month === 11) {
+        dispatch(yearsSlice.actions.setDispayedYear(displayedYear - 1));
+      }
+    }
+  };
 
   return (
     <Header>
@@ -99,7 +96,9 @@ export const MainHeader = () => {
           <IconButton onClick={() => onSetDisplayedMonth(IncDec.Dec)}>
             <ChevronLeftIcon fill={colors.grey.main} />
           </IconButton>
-          <Stack minWidth="120px" alignSelf="center">{months[displayedMonth]}</Stack>
+          <Stack minWidth="120px" alignSelf="center">
+            {months[displayedMonth]}
+          </Stack>
           <IconButton onClick={() => onSetDisplayedMonth(IncDec.Inc)}>
             <ChevronRightIcon fill={colors.grey.main} />
           </IconButton>
