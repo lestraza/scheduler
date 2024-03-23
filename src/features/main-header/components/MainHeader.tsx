@@ -14,7 +14,7 @@ import { ReactComponent as ChevronRightIcon } from "../../../shared/icons/chevro
 import { colors } from "../../../shared/styles";
 
 import { useAppSelector, yearsSlice } from "../../scheduler/store";
-import { CalendarView, IncDec, Months } from "../../../shared/types";
+import { CalendarView } from "../../../shared/types";
 
 const StyledMenuIcon = styled(MenuIcon)`
   fill: ${colors.grey.main};
@@ -26,10 +26,8 @@ const IconButton = styled(MUIIconButton)`
 
 export const MainHeader = () => {
   const dispatch = useDispatch();
-  const { calendarViewTab, displayedMonth, displayedYear } = useAppSelector(
-    (state) => state.yearsReducer
-  );
-  const months = Object.keys(Months);
+  const tab = useAppSelector((state) => state.yearsReducer.calendarViewTab);
+  const currentYear = useAppSelector((state) => state.yearsReducer.currentYear);
 
   const onSetCalendarViewTab = useCallback(
     (value: string) => {
@@ -37,22 +35,6 @@ export const MainHeader = () => {
     },
     [dispatch]
   );
-
-  const onSetDisplayedMonth = (value: IncDec) => {
-    if (value === IncDec.Inc) {
-      const month = displayedMonth === 11 ? 0 : displayedMonth + 1;
-      dispatch(yearsSlice.actions.setDisplayedMonth(month));
-      if (month === 0) {
-        dispatch(yearsSlice.actions.setDispayedYear(displayedYear + 1));
-      }
-    } else {
-      const month = displayedMonth === 0 ? 11 : displayedMonth - 1;
-      dispatch(yearsSlice.actions.setDisplayedMonth(month));
-      if (month === 11) {
-        dispatch(yearsSlice.actions.setDispayedYear(displayedYear - 1));
-      }
-    }
-  };
 
   return (
     <Header>
@@ -75,12 +57,12 @@ export const MainHeader = () => {
           </IconButton>
         </Stack>
       </Stack>
-      <Stack alignSelf="center">{displayedYear}</Stack>
+      <Stack alignSelf="center">{currentYear}</Stack>
       <Stack direction="row">
         <Select
           onSelectOption={onSetCalendarViewTab}
           variant="standard"
-          value={calendarViewTab}
+          value={tab}
         >
           {Object.keys(CalendarView).map((key) => {
             return (
@@ -91,19 +73,6 @@ export const MainHeader = () => {
           })}
         </Select>
       </Stack>
-      {calendarViewTab === CalendarView.Month ? (
-        <Stack direction="row" minWidth="80px">
-          <IconButton onClick={() => onSetDisplayedMonth(IncDec.Dec)}>
-            <ChevronLeftIcon fill={colors.grey.main} />
-          </IconButton>
-          <Stack minWidth="120px" alignSelf="center">
-            {months[displayedMonth]}
-          </Stack>
-          <IconButton onClick={() => onSetDisplayedMonth(IncDec.Inc)}>
-            <ChevronRightIcon fill={colors.grey.main} />
-          </IconButton>
-        </Stack>
-      ) : null}
     </Header>
   );
 };
