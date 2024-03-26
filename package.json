@@ -60,6 +60,7 @@
     "@storybook/react": "^7.6.17",
     "@storybook/react-webpack5": "^7.6.17",
     "@storybook/test": "^7.6.17",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "prop-types": "^15.8.1",
     "storybook": "^7.6.17",
     "webpack": "^5.90.3"
