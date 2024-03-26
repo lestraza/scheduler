@@ -1,6 +1,7 @@
 import type { StoryObj } from "@storybook/react";
 
 import { Bar as Component } from "./Bar";
+import { EventType } from "../../types";
 
 const meta = {
   title: "Scheduler/Bar",
@@ -21,6 +22,10 @@ export const Event: Story = {
 };
 export const Task: Story = {
   render: () => (
-    <Component variant="filled" label="workout with James" type="task" />
+    <Component
+      variant="filled"
+      label="workout with James"
+      type={EventType.Task}
+    />
   ),
 };

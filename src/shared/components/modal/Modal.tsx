@@ -1,5 +1,11 @@
-import styled from "@emotion/styled";
-import { Dialog, DialogContent, DialogProps, IconButton } from "@mui/material";
+import styled from "@mui/styled-engine";
+import {
+  Dialog,
+  DialogContent,
+  DialogProps,
+  IconButton,
+  colors,
+} from "@mui/material";
 import { ReactComponent as CloseIcon } from "../../../shared/icons/close.svg";
 import { ReactComponent as EditIcon } from "../../../shared/icons/edit.svg";
 import { ReactComponent as DeleteIcon } from "../../../shared/icons/delete.svg";
@@ -8,6 +14,12 @@ type ModalProps = {
   onClose: () => void;
   isEdit?: boolean;
 } & DialogProps;
+
+const IconBtn = styled(IconButton)(({ theme }) => ({
+  position: "absolute",
+  top: 8,
+  color: colors.grey[500],
+}));
 
 const ModalComponent = styled(Dialog)(() => ({
   "& .MuiPaper-root.MuiDialog-paper": {
@@ -32,45 +44,36 @@ export const Modal = ({
     <ModalComponent open={open}>
       {isEdit ? (
         <>
-          <IconButton
+          <IconBtn
             aria-label="edit"
             onClick={() => onClose}
             sx={{
-              position: "absolute",
               right: 128,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
             }}
           >
-            <EditIcon />
-          </IconButton>
-          <IconButton
+            <EditIcon fill={colors.grey[400]} />
+          </IconBtn>
+          <IconBtn
             aria-label="delete"
             onClick={onClose}
             sx={{
-              position: "absolute",
               right: 64,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
             }}
           >
-            <DeleteIcon />
-          </IconButton>
+            <DeleteIcon fill={colors.grey[400]} />
+          </IconBtn>
         </>
       ) : null}
 
-      <IconButton
+      <IconBtn
         aria-label="close"
         onClick={onClose}
         sx={{
-          position: "absolute",
           right: 8,
-          top: 8,
-          color: (theme) => theme.palette.grey[500],
         }}
       >
-        <CloseIcon />
-      </IconButton>
+        <CloseIcon fill={colors.grey[400]} />
+      </IconBtn>
       <DialogContent dividers sx={{ minHeight: "250px", minWidth: "300px" }}>
         {children}
       </DialogContent>

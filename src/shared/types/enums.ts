@@ -1,4 +1,4 @@
-export enum IncDec {
+export enum IncrementDecrement {
   Inc = "cnc",
   Dec = "Dec",
 }

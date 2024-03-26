@@ -1,4 +1,3 @@
-import { numberOfDaysPerWeek } from "../constants";
 import { Day, Month, Year } from "../types/date";
 import { Months, Weekdays } from "../types/dateEnums";
 import {
@@ -12,7 +11,7 @@ export const getNumberDaysOfMonth = (year: number, month: number) => {
 
 export const getFirstWeekDayOfMonth = (year: number, month: number) => {
   const startDay = new Date(year, month, 1);
-  return startDay.getDay() || numberOfDaysPerWeek;
+  return startDay.getDay();
 };
 
 export const getDaysOfMonth = (year: number, month: number) => {
