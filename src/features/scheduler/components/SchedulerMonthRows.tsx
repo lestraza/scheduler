@@ -103,7 +103,7 @@ export const SchedulerMonthRows = React.memo(
         }
         return acc;
       }, []);
-    }, [className, days, firstWeekDayOfMonth]);
+    }, [className, days, firstWeekDayOfMonth, onOpen]);
 
     return <>{allDays}</>;
   }
