@@ -1,7 +1,7 @@
 import type { StoryObj } from "@storybook/react";
 
 import { HolidayCard as Component } from "./HolidayCard";
-import { Weekdays } from "../../types";
+import { HolidayType, Weekdays } from "../../types";
 
 const day = {
   date: "2024-04-01T00:00:00.000",
@@ -12,6 +12,7 @@ const day = {
   holiday: {
     name: "Easter Monday",
     namePL: "Poniedziałek Wielkanocny",
+    type: HolidayType.Public,
   },
 };
 const date = new Date(day.date);

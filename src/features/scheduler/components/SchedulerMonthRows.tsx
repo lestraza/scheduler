@@ -1,6 +1,6 @@
 import React, { ReactNode, useMemo, useRef } from "react";
 import { Stack, TableCell, TableRow } from "@mui/material";
-import { Day, EventType } from "../../../shared/types";
+import { Day, EventVariant } from "../../../shared/types";
 import { numberOfDaysPerWeek } from "../../../shared/constants";
 import { DayContainer } from "../../../shared/components/day-container";
 import { Bar } from "../../../shared/components";
@@ -9,7 +9,7 @@ type Props = {
   days: Day[];
   firstWeekDayOfMonth: number;
   className?: string;
-  onOpen?: (day: Day, eventType: EventType) => void;
+  onOpen?: (day: Day, EventVariant: EventVariant) => void;
 };
 type StateProps = {
   counter: number;
@@ -36,7 +36,7 @@ export const SchedulerMonthRows = React.memo(
 
       return days?.reduce((acc: ReactNode[], item, index) => {
         if (state?.current?.counter < numberOfDaysPerWeek) {
-          const type = item.isHoliday ? EventType.Event : EventType.Task;
+          const type = item.isHoliday ? EventVariant.Event : EventVariant.Task;
           const onBarClick = () => {
             onOpen?.(item, type);
           };

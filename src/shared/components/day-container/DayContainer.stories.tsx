@@ -2,7 +2,7 @@ import type { StoryObj } from "@storybook/react";
 
 import { DayContainer as Component } from "./DayContainer";
 import { Bar } from "../bar";
-import { EventType } from "../../types";
+import { EventVariant } from "../../types";
 
 const meta = {
   title: "Scheduler/DayContainer",
@@ -19,7 +19,7 @@ type Story = StoryObj<typeof Component>;
 export const DayContainer: Story = {
   render: () => (
     <Component>
-      <Bar variant="filled" label="workout with James" type={EventType.Task} />
+      <Bar variant="filled" label="workout with James" type={EventVariant.Task} />
     </Component>
   ),
 };

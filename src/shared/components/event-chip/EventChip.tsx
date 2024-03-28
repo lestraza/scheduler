@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
 import { Chip, ChipProps } from "@mui/material";
-import { EventType } from "../../types";
+import { EventVariant } from "../../types";
 
 type Props = {
-  type?: EventType;
+  type?: EventVariant;
 } & ChipProps;
 
 const EventChipComponent = styled(Chip)`
@@ -12,6 +12,6 @@ const EventChipComponent = styled(Chip)`
   border-radius: 4px;
 `;
 
-export const EventChip = ({ type = EventType.Event }: Props) => {
+export const EventChip = ({ type = EventVariant.Event }: Props) => {
   return <EventChipComponent color={type} />;
 };

@@ -1,8 +1,16 @@
-import { Weekdays } from "./dateEnums";
+import { HolidayType, Weekdays } from "./dateEnums";
 
-type Holiday = {
+export type Holiday = {
+  id?: string;
   name: string;
   namePL: string;
+  type: HolidayType;
+};
+
+export type Task = {
+  id: string;
+  name: string;
+  date: string;
 };
 
 export type Day = {
@@ -12,6 +20,7 @@ export type Day = {
   isSelected?: boolean;
   weekday: Weekdays;
   holiday?: Holiday;
+  tasks?: Task[];
 };
 
 export type Month = Day[];

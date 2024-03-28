@@ -1,5 +1,5 @@
 import { Day, Month, Year } from "../types/date";
-import { Months, Weekdays } from "../types/dateEnums";
+import { HolidayType, Months, Weekdays } from "../types/dateEnums";
 import {
   isHoliday as checkIfHoliday,
   getHolidayOnDate,
@@ -39,6 +39,7 @@ export const getDaysOfMonth = (year: number, month: number) => {
     if (isHoliday) {
       const holiday = getHolidayOnDate(date);
       day.holiday = {
+        type: HolidayType.Public,
         name: holiday?.name || "",
         namePL: holiday?.namePL || "",
       };
