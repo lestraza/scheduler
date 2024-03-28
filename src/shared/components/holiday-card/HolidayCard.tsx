@@ -1,5 +1,5 @@
 import { Stack, Typography, colors } from "@mui/material";
-import { Day, EventType } from "../../types";
+import { Day, EventVariant } from "../../types";
 import { EventChip } from "../event-chip";
 import { ReactComponent as NotesIcon } from "../../../shared/icons/notes.svg";
 import { ReactComponent as EventIcon } from "../../../shared/icons/event.svg";
@@ -14,7 +14,7 @@ export const HolidayCard = ({ day, date }: HolidayCardProps) => {
     <Stack sx={{ gap: "16px" }}>
       <Stack paddingLeft="2px">
         <Stack direction="row" alignItems="center">
-          <EventChip type={day?.isHoliday ? EventType.Event : EventType.Task} />
+          <EventChip type={day?.isHoliday ? EventVariant.Event : EventVariant.Task} />
           <Typography variant="h6" paddingLeft="12px">
             {day?.holiday?.namePL}
           </Typography>

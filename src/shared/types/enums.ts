@@ -3,7 +3,12 @@ export enum IncrementDecrement {
   Dec = "Dec",
 }
 
-export enum EventType {
+export enum EventVariant {
   Event = "success",
   Task = "secondary",
+}
+
+export enum EventType {
+  Event = "event",
+  Task = "task",
 }
