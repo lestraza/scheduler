@@ -1,1 +1,1 @@
-declare type Options = { value: unknown; label: unknown };
+declare type Option = { value: unknown; label: unknown };

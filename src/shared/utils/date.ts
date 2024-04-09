@@ -1,9 +1,15 @@
-import { Day, Month, Year } from "../types/date";
+import { Day, Month, Task, Year } from "../types/date";
 import { HolidayType, Months, Weekdays } from "../types/dateEnums";
 import {
   isHoliday as checkIfHoliday,
   getHolidayOnDate,
 } from "poland-public-holidays";
+
+type GetDaysOfMonthProps = {
+  year: number;
+  month: number;
+  tasks?: Task[];
+};
 
 export const getNumberDaysOfMonth = (year: number, month: number) => {
   return new Date(year, month + 1, 0).getDate();
@@ -14,7 +20,11 @@ export const getFirstWeekDayOfMonth = (year: number, month: number) => {
   return startDay.getDay();
 };
 
-export const getDaysOfMonth = (year: number, month: number) => {
+export const getDaysOfMonth = ({
+  year,
+  month,
+  tasks = [],
+}: GetDaysOfMonthProps) => {
   const d = new Date(year, month, 1);
   const timeZoneOffset = d.getTimezoneOffset() * 60 * 1000;
   const days = getNumberDaysOfMonth(year, month);
@@ -36,6 +46,7 @@ export const getDaysOfMonth = (year: number, month: number) => {
       isWeekend: dayweekNumber < 1 || dayweekNumber > 5,
       isHoliday: isHoliday,
     };
+    day.tasks = tasks.filter(({ date }) => date === day.date);
     if (isHoliday) {
       const holiday = getHolidayOnDate(date);
       day.holiday = {
@@ -49,14 +60,36 @@ export const getDaysOfMonth = (year: number, month: number) => {
   return res;
 };
 
+export const dateToISOSting = (date: Date) => {
+  const month = date.getMonth();
+  const year = date.getFullYear();
+  const d = new Date(year, month, 1);
+  const timeZoneOffset = d.getTimezoneOffset() * 60 * 1000;
+  return new Date((date as unknown as number) - timeZoneOffset)
+    .toISOString()
+    .slice(0, -1);
+};
+
 export const getDaysOfYear = () => {
   const date = new Date();
   const year = date.getFullYear();
 
   const calendar = Object.keys(Months)?.reduce((acc: Year, _, index) => {
-    const month = getDaysOfMonth(year, index);
+    const month = getDaysOfMonth({ year, month: index });
     acc.push(month);
     return acc;
   }, []);
   return calendar;
+};
+
+export const createTimePeriodOptions = () => {
+  return [...new Array(24)].reduce((acc: string[], _, index) => {
+    let hour = index < 10 ? "0" + index.toString() : index.toString();
+
+    acc.push(`${hour} : 00`);
+    acc.push(`${hour} : 15`);
+    acc.push(`${hour} : 30`);
+    acc.push(`${hour} : 45`);
+    return acc;
+  }, []);
 };

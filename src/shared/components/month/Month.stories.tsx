@@ -13,7 +13,7 @@ const month = 2;
 const months = Object.keys(Months);
 
 const firstWeekDayOfMonth = getFirstWeekDayOfMonth(year, month);
-const days = getDaysOfMonth(year, month);
+const days = getDaysOfMonth({ year, month });
 
 const rows = (
   <SchedulerMonthRows days={days} firstWeekDayOfMonth={firstWeekDayOfMonth} />

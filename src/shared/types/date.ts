@@ -11,6 +11,16 @@ export type Task = {
   id: string;
   name: string;
   date: string;
+  period: string;
+  description?: string;
+};
+
+export type UserEvent = {
+  id: string;
+  name: string;
+  date: string;
+  period: string;
+  description?: string;
 };
 
 export type Day = {
@@ -21,6 +31,7 @@ export type Day = {
   weekday: Weekdays;
   holiday?: Holiday;
   tasks?: Task[];
+  events?: UserEvent[];
 };
 
 export type Month = Day[];

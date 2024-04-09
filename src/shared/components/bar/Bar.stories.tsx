@@ -15,9 +15,22 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof Component>;
 
+export const Holiday: Story = {
+  render: () => (
+    <Component
+      variant="filled"
+      type={EventVariant.Holiday}
+      label="Orthodox Easter"
+    />
+  ),
+};
 export const Event: Story = {
   render: () => (
-    <Component variant="filled" color="success" label="Orthodox Easter" />
+    <Component
+      variant="filled"
+      type={EventVariant.Event}
+      label="meeting with John"
+    />
   ),
 };
 export const Task: Story = {

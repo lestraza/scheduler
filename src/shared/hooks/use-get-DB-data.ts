@@ -6,7 +6,6 @@ export const useGetDBData = () => {
       let request = indexedDB.open(dbName);
 
       request.onsuccess = () => {
-        console.log("request.onsuccess - getAllData");
         let db = request.result;
         const tx = db.transaction(storeName, "readonly");
         const store = tx.objectStore(storeName);

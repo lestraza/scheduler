@@ -1,30 +1,25 @@
 import { Stack } from "@mui/material";
-import { HolidayCard, Modal, Month } from "../../../shared/components";
+import { Month } from "../../../shared/components";
 import { useAppSelector } from "../store";
 import { SchedulerMonthRows } from "./SchedulerMonthRows";
 import { getDaysOfMonth, getFirstWeekDayOfMonth } from "../../../shared/utils";
 import { SchedulerMonthColumns } from "./SchedulerMonthColumns";
-import { Day } from "../../../shared/types";
-import { useToggle } from "../../../shared/hooks";
-import { useCallback, useLayoutEffect, useState } from "react";
+import { Day, EventType, Task } from "../../../shared/types";
+import { useAddDBData, useToggle } from "../../../shared/hooks";
+import { useCallback, useState } from "react";
 import { weekdaysList } from "../../../shared/constants";
-import { initDB } from "../indexedDB";
+import { ModalCard } from "./ModalCard";
 
-export const MonthView = () => {
+export const MonthView = ({ tasks }: { tasks: Task[] }) => {
   const { open, setOpen } = useToggle();
   const [day, setDay] = useState<Day | null>(null);
-  const [date, setDate] = useState<Date>(new Date());
+  const [modalType, setModalType] = useState<EventType | null>(null);
 
-  const [isDBReady, setIsDBReady] = useState<boolean>(false);
+  const { currentYear, displayedMonth, calendarViewTab } = useAppSelector(
+    ({ yearsReducer }) => yearsReducer
+  );
 
-  useLayoutEffect(() => {
-    const handleInitDB = async () => {
-      const status = await initDB();
-      setIsDBReady(status);
-      console.log(isDBReady);
-    };
-    handleInitDB();
-  }, [isDBReady]);
+  const { addDBData } = useAddDBData();
 
   const onHandleOpen = useCallback(
     (value: Day) => {
@@ -33,24 +28,46 @@ export const MonthView = () => {
       }
       if (day?.date !== value.date && !open) {
         setDay(value);
-        setDate(new Date(value.date));
+        setModalType(EventType.Holiday);
         setOpen(true);
       }
     },
     [day, open, setOpen]
   );
+
+  const onHandleCreateNewTask = useCallback(
+    (day: Day) => {
+      setModalType(EventType.Task);
+      setOpen(true);
+      setDay(day);
+    },
+    [setOpen]
+  );
   const onHandleClose = useCallback(() => {
     setOpen(false);
     setDay(null);
+    setModalType(null);
   }, [setOpen]);
-  const { currentYear, displayedMonth, calendarViewTab } = useAppSelector(
-    ({ yearsReducer }) => yearsReducer
+
+  const onSaveDBData = useCallback(
+    async (data: Task | Event) => {
+      if (modalType) {
+        const res = await addDBData(modalType, data);
+        if (res) onHandleClose();
+      }
+    },
+    [addDBData, modalType, onHandleClose]
   );
+
   const firstWeekDayOfMonth = getFirstWeekDayOfMonth(
     currentYear,
     displayedMonth
   );
-  const days = getDaysOfMonth(currentYear, displayedMonth);
+  const days = getDaysOfMonth({
+    year: currentYear,
+    month: displayedMonth,
+    tasks,
+  });
   const className = calendarViewTab.toLowerCase();
 
   const rows = (
@@ -58,7 +75,8 @@ export const MonthView = () => {
       days={days}
       firstWeekDayOfMonth={firstWeekDayOfMonth}
       className={className}
-      onOpen={onHandleOpen}
+      onOpen={onHandleCreateNewTask}
+      onOpenHolidayCard={onHandleOpen}
     />
   );
 
@@ -67,13 +85,15 @@ export const MonthView = () => {
   return (
     <Stack>
       <Month rows={rows} columns={columns} className={className} />
-      <Modal
-        open={open}
-        onClose={() => onHandleClose()}
-        sx={{ minWidth: "450px" }}
-      >
-        <HolidayCard day={day as Day} date={date} />
-      </Modal>
+      {modalType && (
+        <ModalCard
+          open={open}
+          onClose={() => onHandleClose()}
+          day={day as Day}
+          type={modalType}
+          onSave={onSaveDBData}
+        />
+      )}
     </Stack>
   );
 };

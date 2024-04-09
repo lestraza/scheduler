@@ -18,6 +18,10 @@ export const initDB = (): Promise<boolean> => {
         console.log("Creating users store");
         db.createObjectStore(EventType.Task, { keyPath: "id" });
       }
+      if (!db.objectStoreNames.contains(EventType.Event)) {
+        console.log("Creating users store");
+        db.createObjectStore(EventType.Event, { keyPath: "id" });
+      }
       // no need to resolve here
     };
 
@@ -42,7 +46,6 @@ export const addData = <T>(
     request = indexedDB.open(dbName, version);
 
     request.onsuccess = () => {
-      console.log("request.onsuccess - addData", data);
       db = request.result;
       const tx = db.transaction(storeName, "readwrite");
       const store = tx.objectStore(storeName);
@@ -60,7 +63,6 @@ export const addData = <T>(
     };
   });
 };
-
 
 export const deleteData = (
   storeName: string,

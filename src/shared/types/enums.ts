@@ -4,11 +4,13 @@ export enum IncrementDecrement {
 }
 
 export enum EventVariant {
-  Event = "success",
+  Event = "primary",
   Task = "secondary",
+  Holiday = "success",
 }
 
 export enum EventType {
   Event = "event",
   Task = "task",
+  Holiday = "holiday",
 }
