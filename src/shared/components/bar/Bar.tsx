@@ -1,17 +1,17 @@
 import { Chip, ChipProps } from "@mui/material";
 import { useEffect, useState } from "react";
-import { EventType } from "../../types";
+import { EventVariant } from "../../types";
 
 export type BarProps = {
-  type?: EventType;
+  type?: EventVariant;
   onClick?: () => void;
 } & ChipProps;
 
-export const Bar = ({ onClick, type = EventType.Event, ...rest }: BarProps) => {
+export const Bar = ({ onClick, type = EventVariant.Event, ...rest }: BarProps) => {
   const [color, setColor] = useState<ChipProps["color"]>("success");
 
   useEffect(() => {
-    if (type === EventType.Task) setColor("secondary");
+    if (type === EventVariant.Task) setColor("secondary");
   }, [type]);
 
   return (

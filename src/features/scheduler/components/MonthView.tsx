@@ -4,16 +4,30 @@ import { useAppSelector } from "../store";
 import { SchedulerMonthRows } from "./SchedulerMonthRows";
 import { getDaysOfMonth, getFirstWeekDayOfMonth } from "../../../shared/utils";
 import { SchedulerMonthColumns } from "./SchedulerMonthColumns";
-import { Day, EventType, Weekdays } from "../../../shared/types";
+import { Day } from "../../../shared/types";
 import { useToggle } from "../../../shared/hooks";
-import { useCallback, useState } from "react";
+import { useCallback, useLayoutEffect, useState } from "react";
+import { weekdaysList } from "../../../shared/constants";
+import { initDB } from "../indexedDB";
 
 export const MonthView = () => {
   const { open, setOpen } = useToggle();
   const [day, setDay] = useState<Day | null>(null);
   const [date, setDate] = useState<Date>(new Date());
+
+  const [isDBReady, setIsDBReady] = useState<boolean>(false);
+
+  useLayoutEffect(() => {
+    const handleInitDB = async () => {
+      const status = await initDB();
+      setIsDBReady(status);
+      console.log(isDBReady);
+    };
+    handleInitDB();
+  }, [isDBReady]);
+
   const onHandleOpen = useCallback(
-    (value: Day, eventType: EventType) => {
+    (value: Day) => {
       if (day?.date === value.date) {
         setOpen(false);
       }
@@ -48,8 +62,7 @@ export const MonthView = () => {
     />
   );
 
-  const weekdays = Object.keys(Weekdays);
-  const columns = <SchedulerMonthColumns weekdays={weekdays} />;
+  const columns = <SchedulerMonthColumns weekdays={weekdaysList} />;
 
   return (
     <Stack>

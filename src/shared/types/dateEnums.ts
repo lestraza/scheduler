@@ -27,3 +27,8 @@ export enum CalendarView {
   "Year" = "Year",
   "Month" = "Month",
 }
+
+export enum HolidayType {
+  Public = "public",
+  Private = "private",
+}
