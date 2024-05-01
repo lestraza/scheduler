@@ -1,9 +1,9 @@
 import type { StoryObj } from "@storybook/react";
 
-import { TaskCard as Component } from "./TaskCard";
+import { EventCard as Component } from "./EventCard";
 
 const meta = {
-  title: "Scheduler/TaskCard",
+  title: "Scheduler/EventCard",
   component: Component,
   parameters: {
     layout: "centered",
@@ -14,6 +14,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof Component>;
 
-export const TaskCard: Story = {
-  args: {},
+export const EventCard: Story = {
+  args: {
+    //date: new Date(),
+  },
 };

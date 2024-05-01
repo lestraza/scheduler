@@ -7,4 +7,5 @@ export interface YearsState {
   currentMonth: number;
   displayedMonth: number;
   calendarViewTab: CalendarView;
+  shouldUpdateData: boolean
 }

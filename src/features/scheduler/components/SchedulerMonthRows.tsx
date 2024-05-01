@@ -1,16 +1,27 @@
 import React, { ReactNode, useMemo, useRef } from "react";
 import { Stack, TableCell, TableRow } from "@mui/material";
-import { Day, EventVariant } from "../../../shared/types";
-import { numberOfDaysPerWeek } from "../../../shared/constants";
-import { DayContainer } from "../../../shared/components/day-container";
+import { Day, EventType, UserEvent } from "../../../shared/types";
+import { eventSchema, numberOfDaysPerWeek } from "../../../shared/constants";
+import {
+  DayContainer,
+  OnSelectDayProps,
+} from "../../../shared/components/day-container";
 import { Bar } from "../../../shared/components";
+
+export type OnOpenCardProps = {
+  day: Day;
+  eventType: EventType;
+  userEvent?: UserEvent;
+};
 
 type Props = {
   days: Day[];
   firstWeekDayOfMonth: number;
   className?: string;
-  onOpen?: (day: Day, EventVariant: EventVariant) => void;
-  onOpenHolidayCard?: (day: Day) => void;
+  isSelecting?: boolean;
+  onOpen?: (day: Day, EventType: EventType) => void;
+  onOpenCard?: (props: OnOpenCardProps) => void;
+  onSelectDay?: (prop: OnSelectDayProps) => void;
 };
 type StateProps = {
   counter: number;
@@ -28,8 +39,10 @@ export const SchedulerMonthRows = React.memo(
     days,
     firstWeekDayOfMonth,
     className = "year",
+    isSelecting,
     onOpen,
-    onOpenHolidayCard,
+    onOpenCard,
+    onSelectDay,
   }: Props) => {
     const state = useRef(initialState);
 
@@ -48,10 +61,8 @@ export const SchedulerMonthRows = React.memo(
 
       return days?.reduce((acc: ReactNode[], item, index) => {
         if (state?.current?.counter < numberOfDaysPerWeek) {
-          //const type = item.isHoliday ? EventVariant.Holiday : EventVariant.Task;
-
           const onBarClick = () => {
-            onOpen?.(item, EventVariant.Holiday);
+            onOpen?.(item, EventType.Holiday);
           };
 
           state?.current?.week.push(
@@ -60,24 +71,46 @@ export const SchedulerMonthRows = React.memo(
               id={item.date}
               day={item}
               onClick={onBarClick}
+              onSelectDay={onSelectDay}
+              isSelecting={isSelecting}
             >
-              <Stack>{new Date(item.date).getDate()}</Stack>
+              <Stack sx={{ userSelect: "none" }}>
+                {new Date(item.date).getDate()}
+              </Stack>
               {className === "month" && item.isHoliday ? (
-                <Stack>
+                <Stack sx={{ minWidth: "100%" }}>
                   <Bar
                     label={item.holiday?.name}
-                    type={EventVariant.Holiday}
-                    onClick={() => onOpenHolidayCard?.(item)}
+                    type={EventType.Holiday}
+                    color={
+                      eventSchema.find(
+                        (event) => event.type === EventType.Holiday
+                      )?.color || ""
+                    }
+                    onClick={() =>
+                      onOpenCard?.({
+                        day: item,
+                        eventType: EventType.Holiday,
+                      })
+                    }
                   />
                 </Stack>
               ) : null}
-              {className === "month" && item.tasks?.length ? (
-                <Stack>
-                  {item.tasks.map((task) => (
+              {className === "month" && item.userEvents?.length ? (
+                <Stack sx={{ minWidth: "100%" }}>
+                  {item.userEvents.map((event) => (
                     <Bar
-                      label={task.name}
-                      type={EventVariant.Task}
-                      onClick={() => onOpenHolidayCard?.(item)}
+                      label={event.name}
+                      type={event.type}
+                      color={event.color}
+                      onClick={() =>
+                        onOpenCard?.({
+                          day: item,
+                          eventType: event.type,
+                          userEvent: event,
+                        })
+                      }
+                      key={item.date + event.name}
                     />
                   ))}
                 </Stack>
@@ -137,7 +170,15 @@ export const SchedulerMonthRows = React.memo(
         }
         return acc;
       }, []);
-    }, [className, days, firstWeekDayOfMonth, onOpen, onOpenHolidayCard]);
+    }, [
+      className,
+      days,
+      firstWeekDayOfMonth,
+      isSelecting,
+      onOpen,
+      onOpenCard,
+      onSelectDay,
+    ]);
 
     return <>{allDays}</>;
   }

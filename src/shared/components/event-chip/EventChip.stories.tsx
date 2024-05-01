@@ -1,7 +1,7 @@
 import type { StoryObj } from "@storybook/react";
 
 import { EventChip as Component } from "./EventChip";
-import { EventVariant } from "../../types";
+import { eventSchema } from "../../constants";
 
 const meta = {
   title: "Scheduler/EventChip",
@@ -16,8 +16,8 @@ export default meta;
 type Story = StoryObj<typeof Component>;
 
 export const Event: Story = {
-  render: () => <Component type={EventVariant.Event} />,
+  render: () => <Component color={eventSchema[0].color} />,
 };
 export const Task: Story = {
-  render: () => <Component type={EventVariant.Task} />,
+  render: () => <Component color={eventSchema[1].color} />,
 };
