@@ -1,5 +1,6 @@
-import { Day, Month, Task, Year } from "../types/date";
-import { HolidayType, Months, Weekdays } from "../types/dateEnums";
+import { monthsList, weekdaysList } from "../constants";
+import { Day, Month, UserEvent, Year } from "../types/date";
+import { HolidayType, Weekdays } from "../types/dateEnums";
 import {
   isHoliday as checkIfHoliday,
   getHolidayOnDate,
@@ -8,7 +9,7 @@ import {
 type GetDaysOfMonthProps = {
   year: number;
   month: number;
-  tasks?: Task[];
+  userEvents?: UserEvent[];
 };
 
 export const getNumberDaysOfMonth = (year: number, month: number) => {
@@ -23,30 +24,35 @@ export const getFirstWeekDayOfMonth = (year: number, month: number) => {
 export const getDaysOfMonth = ({
   year,
   month,
-  tasks = [],
+  userEvents = [],
 }: GetDaysOfMonthProps) => {
   const d = new Date(year, month, 1);
   const timeZoneOffset = d.getTimezoneOffset() * 60 * 1000;
   const days = getNumberDaysOfMonth(year, month);
 
-  const weeks = Object.keys(Weekdays);
-
   let res: Month = [];
+  let weekNumber = 0;
   for (let i = 1; i <= days; i++) {
     const date = new Date(year, month, i);
 
     const isHoliday = checkIfHoliday(date);
     const dayweekNumber = date.getDay();
+    if (dayweekNumber === 0) {
+      weekNumber += 1;
+    }
     const day: Day = {
       date: new Date((date as unknown as number) - timeZoneOffset)
         .toISOString()
         .slice(0, -1),
+      weekNumber,
+      dayweekNumber,
+      dayNumber: date.getDate(),
       isSelected: false,
-      weekday: weeks[dayweekNumber] as Weekdays,
+      weekday: weekdaysList[dayweekNumber] as Weekdays,
       isWeekend: dayweekNumber < 1 || dayweekNumber > 5,
       isHoliday: isHoliday,
     };
-    day.tasks = tasks.filter(({ date }) => date === day.date);
+    day.userEvents = userEvents.filter(({ date }) => date.includes(day.date));
     if (isHoliday) {
       const holiday = getHolidayOnDate(date);
       day.holiday = {
@@ -74,7 +80,7 @@ export const getDaysOfYear = () => {
   const date = new Date();
   const year = date.getFullYear();
 
-  const calendar = Object.keys(Months)?.reduce((acc: Year, _, index) => {
+  const calendar = monthsList.reduce((acc: Year, _, index) => {
     const month = getDaysOfMonth({ year, month: index });
     acc.push(month);
     return acc;

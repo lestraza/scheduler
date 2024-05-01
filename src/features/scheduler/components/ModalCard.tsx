@@ -1,41 +1,49 @@
+import { Popover, PopoverProps } from "@mui/material";
 import {
-  CustomModalProps,
   HolidayCard,
-  Modal,
   TaskCard,
+  TaskCardProps,
 } from "../../../shared/components";
-import { Day, EventType, Task } from "../../../shared/types";
+import { Day, EventType, UserEvent } from "../../../shared/types";
+import styled from "@emotion/styled";
 
 type ModalCardProps = {
-  open: boolean;
   type: EventType;
-  isEdit?: boolean;
   day: Day;
-  task?: Task;
   onClose: () => void;
-  onSave: (data: Task | Event) => void;
-} & CustomModalProps;
+  userEvent?: UserEvent;
+} & Partial<TaskCardProps> &
+  PopoverProps;
+
+const CardPopover = styled(Popover)`
+  top: 30%;
+  left: 37%;
+  & .MuiPopover-paper {
+    padding: 16px;
+  }
+`;
 
 export const ModalCard = ({
-  open,
   day,
   type,
   isEdit,
-  task,
+  isNew,
+  userEvent,
+  open,
   onClose,
-  onSave,
+  onSaveData,
 }: ModalCardProps) => {
   return (
-    <Modal open={open} onClose={() => onClose()} sx={{ minWidth: "450px" }}>
-      {type === EventType.Holiday && (
+    <CardPopover open={open} onClose={() => onClose()}>
+      {type === EventType.Holiday || userEvent ? (
         <HolidayCard
           day={day as Day}
           date={day?.date ? new Date(day?.date) : new Date()}
+          userEvent={userEvent}
         />
-      )}
-      {type === EventType.Task && !task && (
-        <TaskCard date={new Date(day?.date)} onSaveData={onSave} />
-      )}
-    </Modal>
+      ) : !userEvent ? (
+        <TaskCard isEdit={isEdit} isNew={isNew} onSaveData={onSaveData!} />
+      ) : null}
+    </CardPopover>
   );
 };

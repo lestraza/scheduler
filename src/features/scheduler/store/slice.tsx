@@ -11,6 +11,7 @@ const initialState: YearsState = {
   currentMonth: new Date().getMonth(),
   displayedMonth: new Date().getMonth(),
   calendarViewTab: CalendarView.Month,
+  shouldUpdateData: true
 };
 
 export const yearsSlice = createSlice({
@@ -32,6 +33,9 @@ export const yearsSlice = createSlice({
       action: PayloadAction<CalendarView>
     ) => {
       state.calendarViewTab = action.payload;
+    },
+    setShouldUpdateData: (state: YearsState, action: PayloadAction<boolean>) => {
+      state.shouldUpdateData = action.payload;
     },
   },
 });

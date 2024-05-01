@@ -1,38 +1,33 @@
 import {
+  Box,
   Button,
   MenuItem,
   Stack,
+  Tab,
+  Tabs,
   TextField,
-  Typography,
   colors,
 } from "@mui/material";
 import { v4 } from "uuid";
-import { ReactComponent as ClockIcon } from "../../../shared/icons/schedule.svg";
 import { ReactComponent as ListIcon } from "../../../shared/icons/list.svg";
 import styled from "@emotion/styled";
 
 import { useToggle } from "../../hooks";
 import { Select } from "../select";
-import { createTimePeriodOptions, dateToISOSting } from "../../utils";
+import { createTimePeriodOptions } from "../../utils";
 import { useEffect, useState } from "react";
-import { Task } from "../../types";
+import { EventType, UserEvent } from "../../types";
+import { Icon } from "../icon";
+import { eventSchema, eventTypeList } from "../../constants";
 
 export type TaskCardType = "new" | "edit" | "default";
 
-type TaskCardProps = {
-  date: Date;
-  task?: Task;
-  type?: TaskCardType;
-  onSaveData: (task: Task) => void;
+export type TaskCardProps = {
+  task?: UserEvent;
+  isNew?: boolean;
+  isEdit?: boolean;
+  onSaveData: (task: UserEvent) => void;
 };
-
-const DateContainer = styled(Stack)`
-  padding: 4px 8px;
-  border-radius: 4px;
-  &:hover {
-    background-color: ${colors.grey[200]};
-  }
-`;
 
 const CustomStack = styled(Stack)`
   flex-direction: row;
@@ -50,12 +45,13 @@ const options = createTimePeriodOptions().map((key) => {
 });
 
 export const TaskCard = ({
-  date,
   task,
-  type = "default",
+  isEdit = false,
+  isNew = false,
   onSaveData,
 }: TaskCardProps) => {
   const { open, setOpen } = useToggle();
+  const [type, setType] = useState(0);
   const [period, setPeriod] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -78,18 +74,24 @@ export const TaskCard = ({
   const onHandleSave = () => {
     const task = {
       id: v4(),
-      date: dateToISOSting(date),
       name: title,
       period,
       description,
+      date: [],
+      type: eventTypeList[type] as EventType,
+      color:
+        eventSchema.find(
+          (event) => event.type === (eventTypeList[type] as EventType)
+        )?.color || "",
     };
     onSaveData(task);
   };
 
   return (
     <Stack sx={{ gap: "16px" }}>
+      <Box></Box>
       <Stack>
-        {type === "default" ? (
+        {!isNew && !isEdit ? (
           title
         ) : (
           <TextField
@@ -100,14 +102,20 @@ export const TaskCard = ({
           />
         )}
       </Stack>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Tabs value={type}>
+          {eventTypeList.map((item, index) => (
+            <Tab
+              label={item}
+              onClick={() => setType(index)}
+              id={item}
+              key={item}
+            />
+          ))}
+        </Tabs>
+      </Box>
       <CustomStack>
-        <ClockIcon fill={colors.grey[400]} />
-        <DateContainer>
-          <Typography>
-            {date.toUTCString().toString().substring(0, 16)}
-          </Typography>
-          <Typography fontSize="10px">Does not repeat</Typography>
-        </DateContainer>
+        <Icon icon="Clock" fill={colors.grey[400]} />
         {!open ? (
           <Button sx={{ minWidth: "100px" }} onClick={() => setOpen(true)}>
             Add time
