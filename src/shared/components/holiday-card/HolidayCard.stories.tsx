@@ -6,6 +6,9 @@ import { HolidayType, Weekdays } from "../../types";
 const day = {
   date: "2024-04-01T00:00:00.000",
   isSelected: false,
+  dayNumber: 1,
+  weekNumber: 0,
+  dayweekNumber: 1,
   weekday: Weekdays.Monday,
   isWeekend: false,
   isHoliday: true,

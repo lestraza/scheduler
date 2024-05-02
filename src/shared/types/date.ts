@@ -1,4 +1,5 @@
 import { HolidayType, Weekdays } from "./dateEnums";
+import { EventType } from "./enums";
 
 export type Holiday = {
   id?: string;
@@ -7,21 +8,30 @@ export type Holiday = {
   type: HolidayType;
 };
 
-export type Task = {
+export type UserEvent = {
   id: string;
   name: string;
-  date: string;
+  date: string[];
+  period: string;
+  type: EventType;
+  color: string
+  description?: string;
 };
 
 export type Day = {
   date: string;
+  dayNumber: number;
+  weekNumber: number;
+  dayweekNumber: number;
   isWeekend?: boolean;
   isHoliday?: boolean;
   isSelected?: boolean;
   weekday: Weekdays;
   holiday?: Holiday;
-  tasks?: Task[];
+  userEvents?: UserEvent[];
 };
+
+export type Week = Day[];
 
 export type Month = Day[];
 

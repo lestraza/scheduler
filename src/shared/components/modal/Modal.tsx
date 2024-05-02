@@ -10,7 +10,7 @@ import { ReactComponent as CloseIcon } from "../../../shared/icons/close.svg";
 import { ReactComponent as EditIcon } from "../../../shared/icons/edit.svg";
 import { ReactComponent as DeleteIcon } from "../../../shared/icons/delete.svg";
 
-type ModalProps = {
+export type CustomModalProps = {
   onClose: () => void;
   isEdit?: boolean;
 } & DialogProps;
@@ -39,9 +39,9 @@ export const Modal = ({
   isEdit = false,
   onClose,
   children,
-}: ModalProps) => {
+}: CustomModalProps) => {
   return (
-    <ModalComponent open={open}>
+    <ModalComponent open={open} onClose={onClose}>
       {isEdit ? (
         <>
           <IconBtn

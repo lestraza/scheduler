@@ -1,15 +1,27 @@
 import React, { ReactNode, useMemo, useRef } from "react";
 import { Stack, TableCell, TableRow } from "@mui/material";
-import { Day, EventVariant } from "../../../shared/types";
-import { numberOfDaysPerWeek } from "../../../shared/constants";
-import { DayContainer } from "../../../shared/components/day-container";
+import { Day, EventType, UserEvent } from "../../../shared/types";
+import { eventSchema, numberOfDaysPerWeek } from "../../../shared/constants";
+import {
+  DayContainer,
+  OnSelectDayProps,
+} from "../../../shared/components/day-container";
 import { Bar } from "../../../shared/components";
+
+export type OnOpenCardProps = {
+  day: Day;
+  eventType: EventType;
+  userEvent?: UserEvent;
+};
 
 type Props = {
   days: Day[];
   firstWeekDayOfMonth: number;
   className?: string;
-  onOpen?: (day: Day, EventVariant: EventVariant) => void;
+  isSelecting?: boolean;
+  onOpen?: (day: Day, EventType: EventType) => void;
+  onOpenCard?: (props: OnOpenCardProps) => void;
+  onSelectDay?: (prop: OnSelectDayProps) => void;
 };
 type StateProps = {
   counter: number;
@@ -23,33 +35,84 @@ const initialState: StateProps = {
 };
 
 export const SchedulerMonthRows = React.memo(
-  ({ days, firstWeekDayOfMonth, className = "year", onOpen }: Props) => {
+  ({
+    days,
+    firstWeekDayOfMonth,
+    className = "year",
+    isSelecting,
+    onOpen,
+    onOpenCard,
+    onSelectDay,
+  }: Props) => {
     const state = useRef(initialState);
 
     const allDays = useMemo(() => {
       [...new Array(numberOfDaysPerWeek)].forEach((_, index) => {
         if (index < firstWeekDayOfMonth) {
-          state?.current?.week.push(<TableCell key={index * 60}></TableCell>);
+          state?.current?.week.push(
+            <TableCell
+              key={index * 60}
+              sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}
+            ></TableCell>
+          );
           state.current.counter += 1;
         }
       });
 
       return days?.reduce((acc: ReactNode[], item, index) => {
         if (state?.current?.counter < numberOfDaysPerWeek) {
-          const type = item.isHoliday ? EventVariant.Event : EventVariant.Task;
           const onBarClick = () => {
-            onOpen?.(item, type);
+            onOpen?.(item, EventType.Holiday);
           };
+
           state?.current?.week.push(
-            <DayContainer className={className} id={item.date}>
-              {new Date(item.date).getDate()}
+            <DayContainer
+              className={className}
+              id={item.date}
+              day={item}
+              onClick={onBarClick}
+              onSelectDay={onSelectDay}
+              isSelecting={isSelecting}
+            >
+              <Stack sx={{ userSelect: "none" }}>
+                {new Date(item.date).getDate()}
+              </Stack>
               {className === "month" && item.isHoliday ? (
-                <Stack>
+                <Stack sx={{ minWidth: "100%" }}>
                   <Bar
                     label={item.holiday?.name}
-                    type={type}
-                    onClick={onBarClick}
+                    type={EventType.Holiday}
+                    color={
+                      eventSchema.find(
+                        (event) => event.type === EventType.Holiday
+                      )?.color || ""
+                    }
+                    onClick={() =>
+                      onOpenCard?.({
+                        day: item,
+                        eventType: EventType.Holiday,
+                      })
+                    }
                   />
+                </Stack>
+              ) : null}
+              {className === "month" && item.userEvents?.length ? (
+                <Stack sx={{ minWidth: "100%" }}>
+                  {item.userEvents.map((event) => (
+                    <Bar
+                      label={event.name}
+                      type={event.type}
+                      color={event.color}
+                      onClick={() =>
+                        onOpenCard?.({
+                          day: item,
+                          eventType: event.type,
+                          userEvent: event,
+                        })
+                      }
+                      key={item.date + event.name}
+                    />
+                  ))}
                 </Stack>
               ) : null}
             </DayContainer>
@@ -66,7 +129,10 @@ export const SchedulerMonthRows = React.memo(
               state?.current?.week.push(
                 <TableCell
                   key={index * i + 15}
-                  sx={{ padding: "8px" }}
+                  sx={{
+                    padding: "8px",
+                    border: "1px solid rgba(224, 224, 224, 1)",
+                  }}
                 ></TableCell>
               );
             });
@@ -75,9 +141,7 @@ export const SchedulerMonthRows = React.memo(
               <TableRow
                 key={state.current.numberOfWeek + item.date}
                 sx={{
-                  "&:last-child td, &:last-child th": {
-                    border: 0,
-                  },
+                  height: "150px",
                 }}
               >
                 {state?.current?.week}
@@ -92,7 +156,10 @@ export const SchedulerMonthRows = React.memo(
           acc.push(
             <TableRow
               key={state?.current?.week + item.date}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              sx={{
+                "&:last-child td, &:last-child th": { border: 0 },
+                height: "150px",
+              }}
             >
               {state?.current?.week}
             </TableRow>
@@ -103,7 +170,15 @@ export const SchedulerMonthRows = React.memo(
         }
         return acc;
       }, []);
-    }, [className, days, firstWeekDayOfMonth, onOpen]);
+    }, [
+      className,
+      days,
+      firstWeekDayOfMonth,
+      isSelecting,
+      onOpen,
+      onOpenCard,
+      onSelectDay,
+    ]);
 
     return <>{allDays}</>;
   }

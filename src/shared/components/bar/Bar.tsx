@@ -1,25 +1,48 @@
-import { Chip, ChipProps } from "@mui/material";
-import { useEffect, useState } from "react";
-import { EventVariant } from "../../types";
+import { Chip, colors } from "@mui/material";
+import { SyntheticEvent } from "react";
+import { EventType } from "../../types";
+import { ReactComponent as TaskIcon } from "../../../shared/icons/task.svg";
+import styled from "@emotion/styled";
 
 export type BarProps = {
-  type?: EventVariant;
+  type: EventType;
+  color: string;
+  label?: string;
   onClick?: () => void;
-} & ChipProps;
+};
 
-export const Bar = ({ onClick, type = EventVariant.Event, ...rest }: BarProps) => {
-  const [color, setColor] = useState<ChipProps["color"]>("success");
+const CustomChip = styled(Chip)`
+  border-radius: 4px;
+  height: 22px;
+  font-size: 0.75rem;
+  margin-bottom: 2px;
+  max-width: 150px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  justify-content: flex-start;
+  & .MuiChip-icon {
+    width: 14px;
+    height: 14px;
+    min-height: 14px;
+    min-width: 14px;
+    fill: ${colors.grey[400]};
+  }
+`;
 
-  useEffect(() => {
-    if (type === EventVariant.Task) setColor("secondary");
-  }, [type]);
+export const Bar = ({ onClick, type, color, ...rest }: BarProps) => {
+  const onHandleOnClick = (event: SyntheticEvent) => {
+    event.stopPropagation();
+    onClick?.();
+  };
 
   return (
-    <Chip
-      onClick={onClick}
+    <CustomChip
+      onClick={onHandleOnClick}
       {...rest}
-      color={color}
-      sx={{ borderRadius: "4px", height: "24px", fontSize: "0.7500rem" }}
+      sx={{ backgroundColor: color, minWidth: '100%' }}
+      icon={type === EventType.Task ? <TaskIcon /> : undefined}
+      variant="filled"
     />
   );
 };

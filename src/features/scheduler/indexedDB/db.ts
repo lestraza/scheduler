@@ -1,5 +1,5 @@
 import { dbName } from "../../../shared/constants";
-import { EventType } from "../../../shared/types";
+import { StoreName } from "../../../shared/types";
 
 let request: IDBOpenDBRequest;
 let db: IDBDatabase;
@@ -14,9 +14,9 @@ export const initDB = (): Promise<boolean> => {
       db = request.result;
 
       // if the data object store doesn't exist, create it
-      if (!db.objectStoreNames.contains(EventType.Task)) {
+      if (!db.objectStoreNames.contains( StoreName.Events)) {
         console.log("Creating users store");
-        db.createObjectStore(EventType.Task, { keyPath: "id" });
+        db.createObjectStore(StoreName.Events, { keyPath: "id" });
       }
       // no need to resolve here
     };
@@ -35,14 +35,13 @@ export const initDB = (): Promise<boolean> => {
 };
 
 export const addData = <T>(
-  storeName: string,
+  storeName: StoreName,
   data: T
 ): Promise<T | string | null> => {
   return new Promise((resolve) => {
     request = indexedDB.open(dbName, version);
 
     request.onsuccess = () => {
-      console.log("request.onsuccess - addData", data);
       db = request.result;
       const tx = db.transaction(storeName, "readwrite");
       const store = tx.objectStore(storeName);
@@ -60,7 +59,6 @@ export const addData = <T>(
     };
   });
 };
-
 
 export const deleteData = (
   storeName: string,
