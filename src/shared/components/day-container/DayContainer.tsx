@@ -7,12 +7,22 @@ import {
 } from "@mui/material";
 import { PropsWithChildren, SyntheticEvent } from "react";
 import { Day } from "../../types";
+export type OnSelectDayProps = {
+  type: Event["type"];
+  day: Day;
+  position?: {
+    top: number;
+    left: number;
+  };
+};
 
-type CustomStackProps = {
+type DayContainerProps = {
   day?: Day;
   id?: string;
   isColumn?: boolean;
+  isSelecting?: boolean;
   onClick?: (day: Day) => void;
+  onSelectDay?: (props: OnSelectDayProps) => void;
 } & PropsWithChildren &
   StackProps;
 
@@ -38,35 +48,57 @@ const CustomStack = styled(MUIStack)`
   }
 `;
 
-const CustomTableCell = styled(TableCell)`
-  padding: 8px;
-  border: 1px solid rgba(224, 224, 224, 1);
-  width: 14%;
-  &.column {
-    border: none;
-    & .MuiStack-root {
-      font-size: 0.8rem;
-      font-weight: bold;
-      cursor: unset;
-    }
-  }
-`;
+const CustomTableCell = styled(TableCell, {
+  shouldForwardProp: (prop) => prop !== "isSelected",
+})<Pick<Day, "isSelected">>(({ isSelected }) => ({
+  padding: "8px",
+  border: " 1px solid rgba(224, 224, 224, 1)",
+  width: "14%",
+  zIndex: "2",
+  "&:hover": {
+    backgroundColor: colors.blueGrey[50],
+  },
+  "&.column": {
+    border: "none",
+    "& .MuiStack-root": {
+      fontSize: "0.8rem",
+      fontWeight: "bold",
+      cursor: "unset",
+    },
+  },
+  backgroundColor: isSelected ? colors.blue[100] : "transparent",
+}));
+
 export const DayContainer = ({
   children,
   id,
   day,
   isColumn = false,
+  isSelecting = false,
   onClick,
+  onSelectDay,
   ...rest
-}: CustomStackProps) => {
-  const onHandleClick = (event: SyntheticEvent) => {
+}: DayContainerProps) => {
+
+  const onHandleSelectDay = (event: SyntheticEvent) => {
     event.stopPropagation();
-    if (onClick && day) onClick?.(day);
+    //console.log("🚀 ~ onHandleSelectDay ~ event:", (event.target as any).querySelector('div').innerText);
+    if (day && (event.type === "mousedown" || isSelecting)) {
+      onSelectDay?.({
+        day,
+        type: event.type,
+      });
+    }
   };
+
   return (
     <CustomTableCell
       className={isColumn ? "column" : ""}
-      onClick={onHandleClick}
+      onClick={onHandleSelectDay}
+      onMouseEnter={onHandleSelectDay}
+      onMouseUp={onHandleSelectDay}
+      isSelected={day?.isSelected}
+      onMouseDown={onHandleSelectDay}
     >
       <CustomStack {...rest}>{children}</CustomStack>
     </CustomTableCell>

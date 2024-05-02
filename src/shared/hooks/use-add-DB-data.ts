@@ -1,11 +1,11 @@
 import { addData } from "../../features/scheduler/indexedDB";
-import { EventType } from "../types";
+import { StoreName } from "../types";
 
 export const useAddDBData = () => {
-  const addDBData = async <T>(type: EventType, data: T) => {
+  const addDBData = async <T>(type: StoreName, data: T) => {
     try {
       await addData(type, data);
-      return true
+      return true;
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.error(err.message);

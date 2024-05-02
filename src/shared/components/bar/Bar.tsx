@@ -1,13 +1,15 @@
-import { Chip, ChipProps, colors } from "@mui/material";
+import { Chip, colors } from "@mui/material";
 import { SyntheticEvent } from "react";
-import { EventVariant } from "../../types";
+import { EventType } from "../../types";
 import { ReactComponent as TaskIcon } from "../../../shared/icons/task.svg";
 import styled from "@emotion/styled";
 
 export type BarProps = {
-  type?: EventVariant;
+  type: EventType;
+  color: string;
+  label?: string;
   onClick?: () => void;
-} & ChipProps;
+};
 
 const CustomChip = styled(Chip)`
   border-radius: 4px;
@@ -28,11 +30,7 @@ const CustomChip = styled(Chip)`
   }
 `;
 
-export const Bar = ({
-  onClick,
-  type = EventVariant.Holiday,
-  ...rest
-}: BarProps) => {
+export const Bar = ({ onClick, type, color, ...rest }: BarProps) => {
   const onHandleOnClick = (event: SyntheticEvent) => {
     event.stopPropagation();
     onClick?.();
@@ -42,8 +40,9 @@ export const Bar = ({
     <CustomChip
       onClick={onHandleOnClick}
       {...rest}
-      color={type}
-      icon={type === EventVariant.Task ? <TaskIcon /> : undefined}
+      sx={{ backgroundColor: color, minWidth: '100%' }}
+      icon={type === EventType.Task ? <TaskIcon /> : undefined}
+      variant="filled"
     />
   );
 };

@@ -11,7 +11,7 @@ export const SchedulerMonthColumns = React.memo(({ weekdays, }: Props) => {
     return weekdays.map((key) => {
       return (
         <DayContainer isColumn key={key} id={key}>
-          {String(key).charAt(0)}
+          {String(key).slice(0, 3)}
         </DayContainer>
       );
     });

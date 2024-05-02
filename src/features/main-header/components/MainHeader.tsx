@@ -6,19 +6,13 @@ import {
   Stack,
 } from "@mui/material";
 import styled from "@emotion/styled";
-import { Select, Header } from "../../../shared/components";
-import { ReactComponent as MenuIcon } from "../../../shared/icons/menu.svg";
-import { ReactComponent as ChevronLeftIcon } from "../../../shared/icons/chevron_left.svg";
-import { ReactComponent as ChevronRightIcon } from "../../../shared/icons/chevron_right.svg";
+import { Select, Header, Icon } from "../../../shared/components";
+
 import { colors } from "../../../shared/styles";
 
 import { useAppSelector, yearsSlice } from "../../scheduler/store";
 import { CalendarView, IncrementDecrement } from "../../../shared/types";
 import { monthsList } from "../../../shared/constants";
-
-const StyledMenuIcon = styled(MenuIcon)`
-  fill: ${colors.grey.main};
-`;
 
 const IconButton = styled(MUIIconButton)`
   min-width: 48px;
@@ -56,7 +50,7 @@ export const MainHeader = () => {
     <Header>
       <Stack direction="row" gap="8px">
         <IconButton>
-          <StyledMenuIcon />
+          <Icon icon="Menu" fill={colors.grey.main} />
         </IconButton>
         <Stack alignSelf="center" fontSize="1.2rem">
           Calendar
@@ -66,10 +60,10 @@ export const MainHeader = () => {
         <Button variant="text">Today</Button>
         <Stack direction="row" minWidth="80px">
           <IconButton>
-            <ChevronLeftIcon fill={colors.grey.main} />
+            <Icon icon="ChevronLeft" fill={colors.grey.main} />
           </IconButton>
           <IconButton>
-            <ChevronRightIcon fill={colors.grey.main} />
+            <Icon icon="ChevronRight" fill={colors.grey.main} />
           </IconButton>
         </Stack>
       </Stack>
@@ -94,7 +88,7 @@ export const MainHeader = () => {
           <IconButton
             onClick={() => onSetDisplayedMonth(IncrementDecrement.Dec)}
           >
-            <ChevronLeftIcon fill={colors.grey.main} />
+            <Icon icon="ChevronLeft" fill={colors.grey.main} />
           </IconButton>
           <Stack minWidth="120px" alignSelf="center">
             {monthsList[displayedMonth]}
@@ -102,7 +96,7 @@ export const MainHeader = () => {
           <IconButton
             onClick={() => onSetDisplayedMonth(IncrementDecrement.Inc)}
           >
-            <ChevronRightIcon fill={colors.grey.main} />
+            <Icon icon="ChevronRight" fill={colors.grey.main} />
           </IconButton>
         </Stack>
       ) : null}

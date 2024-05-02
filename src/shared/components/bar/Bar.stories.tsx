@@ -1,7 +1,8 @@
 import type { StoryObj } from "@storybook/react";
 
 import { Bar as Component } from "./Bar";
-import { EventVariant } from "../../types";
+import { EventType } from "../../types";
+import { eventSchema } from "../../constants";
 
 const meta = {
   title: "Scheduler/Bar",
@@ -18,8 +19,8 @@ type Story = StoryObj<typeof Component>;
 export const Holiday: Story = {
   render: () => (
     <Component
-      variant="filled"
-      type={EventVariant.Holiday}
+      type={EventType.Holiday}
+      color={eventSchema[2].color}
       label="Orthodox Easter"
     />
   ),
@@ -27,8 +28,8 @@ export const Holiday: Story = {
 export const Event: Story = {
   render: () => (
     <Component
-      variant="filled"
-      type={EventVariant.Event}
+      type={EventType.Event}
+      color={eventSchema[0].color}
       label="meeting with John"
     />
   ),
@@ -36,9 +37,9 @@ export const Event: Story = {
 export const Task: Story = {
   render: () => (
     <Component
-      variant="filled"
       label="workout with James"
-      type={EventVariant.Task}
+      type={EventType.Task}
+      color={eventSchema[1].color}
     />
   ),
 };
