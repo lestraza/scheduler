@@ -21,9 +21,8 @@ import { Icon } from "../icon";
 import { eventSchema, eventTypeList } from "../../constants";
 
 export type TaskCardProps = {
-  isNew?: boolean;
-  isEdit?: boolean;
   onSaveData: (task: UserEvent) => void;
+  onClose: () => void
   userEvent?: UserEvent;
 };
 
@@ -42,12 +41,7 @@ const options = createTimePeriodOptions().map((key) => {
   );
 });
 
-export const TaskCard = ({
-  isEdit = false,
-  isNew = false,
-  userEvent,
-  onSaveData,
-}: TaskCardProps) => {
+export const TaskCard = ({ userEvent, onSaveData, onClose }: TaskCardProps) => {
   const { open, setOpen } = useToggle();
   const [type, setType] = useState(0);
   const [period, setPeriod] = useState("");
@@ -141,12 +135,21 @@ export const TaskCard = ({
           />
         </Stack>
       </CustomStack>
-      <Button
-        sx={{ minWidth: "75px", alignSelf: "end" }}
-        onClick={onHandleSave}
-      >
-        Save
-      </Button>
+      <CustomStack justifyContent="flex-end">
+        <Button
+          sx={{ minWidth: "75px", alignSelf: "end" }}
+          onClick={onClose}
+          color="secondary"
+        >
+          Cancel
+        </Button>
+        <Button
+          sx={{ minWidth: "75px", alignSelf: "end" }}
+          onClick={onHandleSave}
+        >
+          Save
+        </Button>
+      </CustomStack>
     </Stack>
   );
 };
