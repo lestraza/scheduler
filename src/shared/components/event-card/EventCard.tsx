@@ -10,7 +10,7 @@ export type EventCardProps = {
   day: Day;
   date: Date;
   userEvent?: UserEvent;
-  onEditHandle: () => void;
+  onHandleEdit: () => void;
   onHandleDelete: () => void;
 };
 
@@ -18,7 +18,7 @@ export const EventCard = ({
   day,
   date,
   userEvent,
-  onEditHandle,
+  onHandleEdit,
   onHandleDelete,
 }: EventCardProps) => {
   return (
@@ -26,7 +26,7 @@ export const EventCard = ({
       <Stack justifyContent="flex-end" direction="row">
         {userEvent && (
           <>
-            <IconButton onClick={() => onEditHandle()}>
+            <IconButton onClick={() => onHandleEdit()}>
               <Icon icon="Edit" />
             </IconButton>
             <IconButton onClick={() => onHandleDelete()}>

@@ -75,9 +75,9 @@ export const MonthView = ({ userEvents }: { userEvents: UserEvent[] }) => {
     [day, setOpen]
   );
 
-  const onEditHandle = useCallback(() => {
+  const onHandleEdit = () => {
     setIsEdit((prev) => !prev);
-  }, []);
+  };
 
   const onHandleClose = useCallback(() => {
     const days = [...allDays].map((day) => {
@@ -234,7 +234,7 @@ export const MonthView = ({ userEvents }: { userEvents: UserEvent[] }) => {
           onSaveData={onSaveDBData}
           isEdit={isEdit}
           userEvent={userEvent}
-          onEditHandle={onEditHandle}
+          onHandleEdit={onHandleEdit}
           onHandleDelete={onDeleteDBData}
         />
       )}

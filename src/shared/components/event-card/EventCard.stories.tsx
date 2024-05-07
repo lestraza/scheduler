@@ -53,7 +53,7 @@ export const Holiday: Story = {
     <EventCardComponent
       day={day}
       date={date}
-      onEditHandle={() => {}}
+      onHandleEdit={() => {}}
       onHandleDelete={() => {}}
     />
   ),
@@ -65,7 +65,7 @@ export const Event: Story = {
       day={day}
       date={date}
       userEvent={userEvent}
-      onEditHandle={() => {}}
+      onHandleEdit={() => {}}
       onHandleDelete={() => {}}
     />
   ),

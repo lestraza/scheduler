@@ -7,8 +7,8 @@ type ModalCardProps = {
   type: EventType;
   day: Day;
   onClose: () => void;
-  onEditHandle: () => void;
-  onHandleDelete: () => void
+  onHandleEdit: () => void;
+  onHandleDelete: () => void;
   userEvent?: UserEvent;
 } & Partial<TaskCardProps> &
   PopoverProps;
@@ -29,17 +29,17 @@ export const ModalCard = ({
   open,
   onClose,
   onSaveData,
-  onEditHandle,
-  onHandleDelete
+  onHandleEdit,
+  onHandleDelete,
 }: ModalCardProps) => {
   return (
     <CardPopover open={open} onClose={() => onClose()}>
       {type === EventType.Holiday || (userEvent && !isEdit) ? (
         <EventCard
-          day={day as Day}
+          day={day}
           date={day?.date ? new Date(day?.date) : new Date()}
           userEvent={userEvent}
-          onEditHandle={onEditHandle}
+          onHandleEdit={onHandleEdit}
           onHandleDelete={onHandleDelete}
         />
       ) : !userEvent || isEdit ? (
