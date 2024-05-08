@@ -22,7 +22,7 @@ import { eventSchema, eventTypeList } from "../../constants";
 
 export type TaskCardProps = {
   onSaveData: (task: UserEvent) => void;
-  onClose: () => void
+  onClose: () => void;
   userEvent?: UserEvent;
 };
 
@@ -137,7 +137,16 @@ export const TaskCard = ({ userEvent, onSaveData, onClose }: TaskCardProps) => {
       </CustomStack>
       <CustomStack justifyContent="flex-end">
         <Button
-          sx={{ minWidth: "75px", alignSelf: "end" }}
+          sx={{
+            minWidth: "75px",
+            alignSelf: "end",
+            color: colors.pink[200],
+            borderColor: colors.pink[200],
+            "&:hover": {
+              color: colors.pink[200],
+              borderColor: colors.pink[200],
+            },
+          }}
           onClick={onClose}
           color="secondary"
         >
