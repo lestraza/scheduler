@@ -1,13 +1,7 @@
+import { Popover, PopoverProps } from "@mui/material";
 import {
-  Button,
-  Popover,
-  PopoverProps,
-  Stack,
-  Typography,
-} from "@mui/material";
-import {
+  ConfirmAlert,
   EventCard,
-  Modal,
   TaskCard,
   TaskCardProps,
 } from "../../../shared/components";
@@ -66,34 +60,12 @@ export const ModalCard = ({
           />
         ) : null}
       </CardPopover>
-      <Modal
+      <ConfirmAlert
         open={isOpenConfirm}
-        onClose={() => setOpenConfirm((prev) => !prev)}
-        sx={{
-          "&&& .MuiDialogContent-root": { minHeight: "unset", padding: "24px" },
-        }}
-      >
-        <Typography sx={{ marginBottom: "24px" }}>
-          Are you sure you want to delete this event?
-        </Typography>
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="center"
-          sx={{ gap: "48px" }}
-        >
-          <Button
-            color="secondary"
-            variant="outlined"
-            onClick={() => setOpenConfirm(false)}
-          >
-            Cancel
-          </Button>
-          <Button variant="outlined" onClick={() => onHandleDelete()}>
-            Confirm
-          </Button>
-        </Stack>
-      </Modal>
+        setOpen={setOpenConfirm}
+        text="Are you sure you want to delete this event?"
+        onConfirm={onHandleDelete}
+      />
     </>
   );
 };
