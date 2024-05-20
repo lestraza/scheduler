@@ -5,7 +5,11 @@ import { OnOpenCardProps, SchedulerMonthRows } from "./SchedulerMonthRows";
 import { getDaysOfMonth, getFirstWeekDayOfMonth } from "../../../shared/utils";
 import { SchedulerMonthColumns } from "./SchedulerMonthColumns";
 import { Day, EventType, StoreName, UserEvent } from "../../../shared/types";
-import { useAddDBData, useToggle } from "../../../shared/hooks";
+import {
+  useAddDBData,
+  useDeleteDBData,
+  useToggle,
+} from "../../../shared/hooks";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { weekdaysList } from "../../../shared/constants";
 import { ModalCard } from "./ModalCard";
@@ -34,6 +38,7 @@ export const MonthView = ({ userEvents }: { userEvents: UserEvent[] }) => {
   const [userEvent, setUserEvent] = useState<UserEvent | undefined>(undefined);
   const state = useRef<StateType>(initialState);
   const [isSelecting, setIsSelecting] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
 
   const { currentYear, displayedMonth, calendarViewTab } = useAppSelector(
     ({ yearsReducer }) => yearsReducer
@@ -42,6 +47,7 @@ export const MonthView = ({ userEvents }: { userEvents: UserEvent[] }) => {
   const dispatch = useDispatch();
 
   const { addDBData } = useAddDBData();
+  const { deleteDBData } = useDeleteDBData();
 
   useEffect(() => {
     const days = getDaysOfMonth({
@@ -63,11 +69,15 @@ export const MonthView = ({ userEvents }: { userEvents: UserEvent[] }) => {
         setOpen(true);
       }
       if (userEvent) {
-        setUserEvent(userEvent)
+        setUserEvent(userEvent);
       }
     },
     [day, setOpen]
   );
+
+  const onHandleEdit = () => {
+    setIsEdit((prev) => !prev);
+  };
 
   const onHandleClose = useCallback(() => {
     const days = [...allDays].map((day) => {
@@ -78,7 +88,8 @@ export const MonthView = ({ userEvents }: { userEvents: UserEvent[] }) => {
     setOpen(false);
     setDay(null);
     setEventType(null);
-    setUserEvent(undefined)
+    setUserEvent(undefined);
+    setIsEdit(false);
   }, [allDays, setOpen]);
 
   const onHandleSelectDays = ({ day, type }: OnSelectDayProps) => {
@@ -152,8 +163,21 @@ export const MonthView = ({ userEvents }: { userEvents: UserEvent[] }) => {
     }
   };
 
+  const onDeleteDBData = useCallback(async () => {
+    if (userEvent) {
+      const res = await deleteDBData(StoreName.Events, userEvent.id);
+      if (res) {
+        onHandleClose();
+        dispatch(setShouldUpdateData(true));
+      }
+    }
+  }, [deleteDBData, dispatch, onHandleClose, setShouldUpdateData, userEvent]);
+
   const onSaveDBData = useCallback(
     async (data: UserEvent) => {
+      if (isEdit && userEvent) {
+        await deleteDBData(StoreName.Events, userEvent.id);
+      }
       if (eventType) {
         data.date = state.current.dates;
         const res = await addDBData(StoreName.Events, data);
@@ -166,7 +190,16 @@ export const MonthView = ({ userEvents }: { userEvents: UserEvent[] }) => {
         }
       }
     },
-    [addDBData, dispatch, eventType, onHandleClose, setShouldUpdateData]
+    [
+      addDBData,
+      deleteDBData,
+      dispatch,
+      eventType,
+      isEdit,
+      onHandleClose,
+      setShouldUpdateData,
+      userEvent,
+    ]
   );
 
   const firstWeekDayOfMonth = getFirstWeekDayOfMonth(
@@ -199,8 +232,10 @@ export const MonthView = ({ userEvents }: { userEvents: UserEvent[] }) => {
           day={day as Day}
           type={eventType}
           onSaveData={onSaveDBData}
-          isNew={true}
+          isEdit={isEdit}
           userEvent={userEvent}
+          onHandleEdit={onHandleEdit}
+          onHandleDelete={onDeleteDBData}
         />
       )}
     </Stack>

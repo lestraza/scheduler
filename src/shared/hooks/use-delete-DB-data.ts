@@ -4,6 +4,7 @@ export const useDeleteDBData = () => {
   const deleteDBData = async (storeName: string, id: string) => {
     try {
       await deleteData(storeName, id);
+      return true
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.error(err.message);

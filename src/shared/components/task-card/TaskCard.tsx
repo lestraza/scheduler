@@ -20,13 +20,10 @@ import { EventType, UserEvent } from "../../types";
 import { Icon } from "../icon";
 import { eventSchema, eventTypeList } from "../../constants";
 
-export type TaskCardType = "new" | "edit" | "default";
-
 export type TaskCardProps = {
-  task?: UserEvent;
-  isNew?: boolean;
-  isEdit?: boolean;
   onSaveData: (task: UserEvent) => void;
+  onClose: () => void;
+  userEvent?: UserEvent;
 };
 
 const CustomStack = styled(Stack)`
@@ -44,12 +41,7 @@ const options = createTimePeriodOptions().map((key) => {
   );
 });
 
-export const TaskCard = ({
-  task,
-  isEdit = false,
-  isNew = false,
-  onSaveData,
-}: TaskCardProps) => {
+export const TaskCard = ({ userEvent, onSaveData, onClose }: TaskCardProps) => {
   const { open, setOpen } = useToggle();
   const [type, setType] = useState(0);
   const [period, setPeriod] = useState("");
@@ -57,12 +49,17 @@ export const TaskCard = ({
   const [description, setDescription] = useState("");
 
   useEffect(() => {
-    if (task) {
-      setDescription(task.description || "");
-      setPeriod(task.period);
-      setTitle(task.name);
+    if (userEvent) {
+      setDescription(userEvent.description || "");
+      setPeriod(userEvent.period);
+      setTitle(userEvent.name);
+      const index = eventSchema.findIndex(
+        ({ type }) => type === userEvent.type
+      );
+      setType(index);
+      setOpen(true);
     }
-  }, [task]);
+  }, [setOpen, userEvent]);
 
   const onHandleDescription = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDescription(event.target.value);
@@ -89,18 +86,13 @@ export const TaskCard = ({
 
   return (
     <Stack sx={{ gap: "16px" }}>
-      <Box></Box>
       <Stack>
-        {!isNew && !isEdit ? (
-          title
-        ) : (
-          <TextField
-            variant="standard"
-            placeholder="Add title and time"
-            value={title}
-            onChange={onHandleTitle}
-          />
-        )}
+        <TextField
+          variant="standard"
+          placeholder="Add title and time"
+          value={title}
+          onChange={onHandleTitle}
+        />
       </Stack>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={type}>
@@ -143,12 +135,30 @@ export const TaskCard = ({
           />
         </Stack>
       </CustomStack>
-      <Button
-        sx={{ minWidth: "75px", alignSelf: "end" }}
-        onClick={onHandleSave}
-      >
-        Save
-      </Button>
+      <CustomStack justifyContent="flex-end">
+        <Button
+          sx={{
+            minWidth: "75px",
+            alignSelf: "end",
+            color: colors.pink[200],
+            borderColor: colors.pink[200],
+            "&:hover": {
+              color: colors.pink[200],
+              borderColor: colors.pink[200],
+            },
+          }}
+          onClick={onClose}
+          color="secondary"
+        >
+          Cancel
+        </Button>
+        <Button
+          sx={{ minWidth: "75px", alignSelf: "end" }}
+          onClick={onHandleSave}
+        >
+          Save
+        </Button>
+      </CustomStack>
     </Stack>
   );
 };

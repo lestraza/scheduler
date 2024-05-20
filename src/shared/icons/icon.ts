@@ -8,6 +8,8 @@ import { ReactComponent as Clock } from "./schedule.svg";
 import { ReactComponent as Menu } from "./menu.svg";
 import { ReactComponent as ChevronLeft } from "./chevron_left.svg";
 import { ReactComponent as ChevronRight } from "./chevron_right.svg";
+import { ReactComponent as Edit } from "./edit.svg";
+import { ReactComponent as Delete } from "./delete.svg";
 
 export const icons = {
   List,
@@ -19,5 +21,7 @@ export const icons = {
   Clock,
   Menu,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Edit,
+  Delete
 };
