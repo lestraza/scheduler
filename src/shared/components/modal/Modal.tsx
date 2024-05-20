@@ -39,9 +39,10 @@ export const Modal = ({
   isEdit = false,
   onClose,
   children,
+  ...rest
 }: CustomModalProps) => {
   return (
-    <ModalComponent open={open} onClose={onClose}>
+    <ModalComponent open={open} onClose={onClose} {...rest}>
       {isEdit ? (
         <>
           <IconBtn

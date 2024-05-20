@@ -8,3 +8,4 @@ export * from "./event-card";
 export * from "./task-card";
 export * from "./menu";
 export * from "./icon";
+export * from "./confirm-alert";
