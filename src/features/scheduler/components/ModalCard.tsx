@@ -14,7 +14,7 @@ type ModalCardProps = {
   day: Day;
   isEdit: boolean;
   onClose: () => void;
-  onEditHandle: () => void;
+  onHandleEdit: () => void;
   onHandleDelete: () => void;
   userEvent?: UserEvent;
 } & Partial<TaskCardProps> &
@@ -36,7 +36,7 @@ export const ModalCard = ({
   open,
   onClose,
   onSaveData,
-  onEditHandle,
+  onHandleEdit,
   onHandleDelete,
 }: ModalCardProps) => {
   const { open: isOpenConfirm, setOpen: setOpenConfirm } = useToggle();
@@ -49,7 +49,7 @@ export const ModalCard = ({
             day={day as Day}
             date={day?.date ? new Date(day?.date) : new Date()}
             userEvent={userEvent}
-            onEditHandle={onEditHandle}
+            onHandleEdit={onHandleEdit}
             onHandleDelete={() => setOpenConfirm(true)}
           />
         ) : !userEvent || isEdit ? (
