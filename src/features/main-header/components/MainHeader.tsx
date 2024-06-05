@@ -51,7 +51,10 @@ export const MainHeader = () => {
   };
 
   const onHandleLogout = () => {
-    logout();
+    const token = localStorage.getItem("scheduler");
+    if (token) {
+      logout(token);
+    }
   };
 
   return (

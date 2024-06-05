@@ -7,14 +7,14 @@ import { Navigate } from "react-router-dom";
 
 export const Auth = () => {
   const [isLoginForm, setLoginForm] = useState(false);
-  const { user, test_token, login, signup } = useContext(AuthContext);
+  const { user, testToken, login, signup } = useContext(AuthContext);
 
   useEffect(() => {
     const token = localStorage.getItem("scheduler");
     if (!user && token) {
-      test_token(token);
+      testToken(token);
     }
-  }, [test_token, user, user?.username]);
+  }, [testToken, user, user?.username]);
 
   return user?.username ? (
     <Navigate to="/" replace />
