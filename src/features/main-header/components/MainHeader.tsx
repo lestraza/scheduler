@@ -1,18 +1,20 @@
+import { useCallback, useContext } from "react";
 import { useDispatch } from "react-redux";
 import {
   Button,
   IconButton as MUIIconButton,
   MenuItem,
   Stack,
+  Typography,
 } from "@mui/material";
 import styled from "@emotion/styled";
-import { Select, Header, Icon } from "../../../shared/components";
-
+import { Select, Header, Icon, ConfirmAlert } from "../../../shared/components";
 import { colors } from "../../../shared/styles";
-
 import { useAppSelector, yearsSlice } from "../../scheduler/store";
 import { CalendarView, IncrementDecrement } from "../../../shared/types";
 import { monthsList } from "../../../shared/constants";
+import { AuthContext } from "../../authorization/components";
+import { useToggle } from "../../../shared/hooks";
 
 const IconButton = styled(MUIIconButton)`
   min-width: 48px;
@@ -20,6 +22,8 @@ const IconButton = styled(MUIIconButton)`
 
 export const MainHeader = () => {
   const dispatch = useDispatch();
+  const { user, logout } = useContext(AuthContext);
+  const { open, setOpen } = useToggle();
   const { calendarViewTab, displayedMonth, displayedYear } = useAppSelector(
     (state) => state.yearsReducer
   );
@@ -30,7 +34,7 @@ export const MainHeader = () => {
     dispatch(setCalendarViewTab(value as CalendarView));
   };
 
-  const onSetDisplayedMonth = (value: IncrementDecrement) => {
+  const onSetDisplayedMonth = useCallback((value: IncrementDecrement) => {
     if (value === IncrementDecrement.Inc) {
       const month = displayedMonth === 11 ? 0 : displayedMonth + 1;
       dispatch(setDisplayedMonth(month));
@@ -43,6 +47,13 @@ export const MainHeader = () => {
       if (month === 11) {
         dispatch(setDispayedYear(displayedYear - 1));
       }
+    }
+  },[dispatch, displayedMonth, displayedYear, setDispayedYear, setDisplayedMonth]);
+
+  const onHandleLogout = () => {
+    const token = localStorage.getItem("scheduler");
+    if (token) {
+      logout(token);
     }
   };
 
@@ -100,6 +111,22 @@ export const MainHeader = () => {
           </IconButton>
         </Stack>
       ) : null}
+      <Stack
+        direction="row"
+        gap="12px"
+        alignItems="center"
+        justifyContent="flex-end"
+        width="100%"
+      >
+        <Typography>{user?.username}</Typography>
+        <Button onClick={() => setOpen(true)}>Log out</Button>
+      </Stack>
+      <ConfirmAlert
+        open={open}
+        setOpen={setOpen}
+        text="Are you sure you want to log out?"
+        onConfirm={onHandleLogout}
+      />
     </Header>
   );
 };

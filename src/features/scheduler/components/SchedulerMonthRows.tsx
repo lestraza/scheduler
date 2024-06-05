@@ -24,12 +24,10 @@ type Props = {
   onSelectDay?: (prop: OnSelectDayProps) => void;
 };
 type StateProps = {
-  counter: number;
   week: ReactNode[];
   numberOfWeek: number;
 };
 const initialState: StateProps = {
-  counter: 0,
   week: [],
   numberOfWeek: 1,
 };
@@ -53,14 +51,13 @@ export const SchedulerMonthRows = React.memo(
             <TableCell
               key={index * 60}
               sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}
-            ></TableCell>
+            />
           );
-          state.current.counter += 1;
         }
       });
 
       return days?.reduce((acc: ReactNode[], item, index) => {
-        if (state?.current?.counter < numberOfDaysPerWeek) {
+        if (item.dayweekNumber < numberOfDaysPerWeek) {
           const onBarClick = () => {
             onOpen?.(item, EventType.Holiday);
           };
@@ -118,13 +115,12 @@ export const SchedulerMonthRows = React.memo(
             </DayContainer>
           );
 
-          state.current.counter += 1;
           if (
-            index + 1 === days.length &&
-            numberOfDaysPerWeek > state?.current?.counter
+            index + 1 === days?.length &&
+            item.dayweekNumber < numberOfDaysPerWeek - 1
           ) {
             [
-              ...new Array(numberOfDaysPerWeek - 1 - state?.current?.counter),
+              ...new Array(numberOfDaysPerWeek - 1 - item.dayweekNumber),
             ].forEach((_, i) => {
               state?.current?.week.push(
                 <TableCell
@@ -133,7 +129,7 @@ export const SchedulerMonthRows = React.memo(
                     padding: "8px",
                     border: "1px solid rgba(224, 224, 224, 1)",
                   }}
-                ></TableCell>
+                />
               );
             });
 
@@ -149,15 +145,14 @@ export const SchedulerMonthRows = React.memo(
             );
             state.current.week = [];
             state.current.numberOfWeek += 1;
-            state.current.counter = 0;
           }
         }
-        if (state.current.counter === numberOfDaysPerWeek) {
+        if (item.dayweekNumber + 1 === numberOfDaysPerWeek) {
           acc.push(
             <TableRow
               key={state?.current?.week + item.date}
               sx={{
-                "&:last-child td, &:last-child th": { border: 0 },
+                "&:last-child th": { border: 0 },
                 height: "150px",
               }}
             >
@@ -166,7 +161,6 @@ export const SchedulerMonthRows = React.memo(
           );
           state.current.week = [];
           state.current.numberOfWeek += 1;
-          state.current.counter = 0;
         }
         return acc;
       }, []);
