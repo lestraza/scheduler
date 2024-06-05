@@ -115,7 +115,10 @@ export const SchedulerMonthRows = React.memo(
             </DayContainer>
           );
 
-          if (index + 1 === days?.length && item.dayweekNumber < 6) {
+          if (
+            index + 1 === days?.length &&
+            item.dayweekNumber < numberOfDaysPerWeek - 1
+          ) {
             [
               ...new Array(numberOfDaysPerWeek - 1 - item.dayweekNumber),
             ].forEach((_, i) => {
