@@ -7,6 +7,6 @@ export interface AuthContextType {
   user: User | null;
   login: (user: User) => void;
   signup: (user: User, callback: VoidFunction) => void;
-  test_token: (token: string) => void;
-  logout: () => void;
+  testToken: (token: string) => void;
+  logout: (token: string) => void;
 }

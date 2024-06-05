@@ -16,82 +16,72 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
   const signup = async (user: User, callback: VoidFunction) => {
-    await fetch(BASE_URL + "signup", {
-      method: "POST",
-      headers,
-      body: JSON.stringify(user),
-    })
-      .then((res) => {
-        if (res.ok) {
-          callback()
-        }
-      })
-      .catch((err) => {
-        console.log(err);
+    try {
+      const res = await fetch(BASE_URL + "signup", {
+        method: "POST",
+        headers,
+        body: JSON.stringify(user),
       });
+      if (res.ok) {
+        callback();
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const login = async (user: User) => {
-    await fetch(BASE_URL + "login", {
-      method: "POST",
-      headers,
-      body: JSON.stringify(user),
-    })
-      .then((res) => {
-        if (res.ok) {
-          res.json().then((data) => {
-            const { token } = data;
-            localStorage.setItem(localStorageKey, token);
-            setUser(data.user);
-          });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
+    try {
+      const res = await fetch(BASE_URL + "login", {
+        method: "POST",
+        headers,
+        body: JSON.stringify(user),
       });
-  };
-
-  const test_token = async () => {
-    const token = localStorage.getItem(localStorageKey);
-    if (token) {
-      const headersWithToken = { ...headers, Authorization: `Token ${token}` };
-      await fetch(BASE_URL + "test_token", {
-        headers: headersWithToken,
-      })
-        .then((res) => {
-          if (res.ok) {
-            res.json().then((data) => {
-              setUser(data.user);
-              return true;
-            });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      if (res.ok) {
+        const data = await res.json();
+        if (data) {
+          const { token } = data;
+          localStorage.setItem(localStorageKey, token);
+          setUser(data.user);
+        }
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
-  const logout = async () => {
-    const token = localStorage.getItem(localStorageKey);
-    if (token) {
+  const testToken = async (token: string) => {
+    try {
       const headersWithToken = { ...headers, Authorization: `Token ${token}` };
-      await fetch(BASE_URL + "logout", {
+      const res = await fetch(BASE_URL + "test_token", {
         headers: headersWithToken,
-      })
-        .then((res) => {
-          if (res.ok) {
-            setUser(null);
-            localStorage.removeItem(localStorageKey);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setUser(data.user);
+        return true;
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
-  const value = { user, signup, login, test_token, logout };
+  const logout = async (token: string) => {
+    try {
+      const headersWithToken = { ...headers, Authorization: `Token ${token}` };
+      const res = await fetch(BASE_URL + "logout", {
+        headers: headersWithToken,
+      });
+      if (res.ok) {
+        setUser(null);
+        localStorage.removeItem(localStorageKey);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const value = { user, signup, login, testToken, logout };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
