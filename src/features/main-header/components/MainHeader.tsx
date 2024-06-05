@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useCallback, useContext } from "react";
 import { useDispatch } from "react-redux";
 import {
   Button,
@@ -34,7 +34,7 @@ export const MainHeader = () => {
     dispatch(setCalendarViewTab(value as CalendarView));
   };
 
-  const onSetDisplayedMonth = (value: IncrementDecrement) => {
+  const onSetDisplayedMonth = useCallback((value: IncrementDecrement) => {
     if (value === IncrementDecrement.Inc) {
       const month = displayedMonth === 11 ? 0 : displayedMonth + 1;
       dispatch(setDisplayedMonth(month));
@@ -48,7 +48,7 @@ export const MainHeader = () => {
         dispatch(setDispayedYear(displayedYear - 1));
       }
     }
-  };
+  },[dispatch, displayedMonth, displayedYear, setDispayedYear, setDisplayedMonth]);
 
   const onHandleLogout = () => {
     const token = localStorage.getItem("scheduler");
