@@ -4,14 +4,16 @@ import { getDaysOfYear } from "../../../shared/utils/date";
 import { YearsState } from "./types";
 import { CalendarView } from "../../../shared/types";
 
+const date = new Date();
+
 const initialState: YearsState = {
   year: [],
-  currentYear: new Date().getFullYear(),
-  displayedYear: new Date().getFullYear(),
-  currentMonth: new Date().getMonth(),
-  displayedMonth: new Date().getMonth(),
+  currentYear: date.getFullYear(),
+  displayedYear: date.getFullYear(),
+  currentMonth: date.getMonth(),
+  displayedMonth: date.getMonth(),
   calendarViewTab: CalendarView.Month,
-  shouldUpdateData: true
+  shouldUpdateData: true,
 };
 
 export const yearsSlice = createSlice({
@@ -34,7 +36,10 @@ export const yearsSlice = createSlice({
     ) => {
       state.calendarViewTab = action.payload;
     },
-    setShouldUpdateData: (state: YearsState, action: PayloadAction<boolean>) => {
+    setShouldUpdateData: (
+      state: YearsState,
+      action: PayloadAction<boolean>
+    ) => {
       state.shouldUpdateData = action.payload;
     },
   },

@@ -40,7 +40,7 @@ export const MonthView = ({ userEvents }: { userEvents: UserEvent[] }) => {
   const [isSelecting, setIsSelecting] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
 
-  const { currentYear, displayedMonth, calendarViewTab } = useAppSelector(
+  const { displayedYear, displayedMonth, calendarViewTab } = useAppSelector(
     ({ yearsReducer }) => yearsReducer
   );
   const { setShouldUpdateData } = yearsSlice.actions;
@@ -50,13 +50,15 @@ export const MonthView = ({ userEvents }: { userEvents: UserEvent[] }) => {
   const { deleteDBData } = useDeleteDBData();
 
   useEffect(() => {
-    const days = getDaysOfMonth({
-      year: currentYear,
-      month: displayedMonth,
-      userEvents,
-    });
-    setAllDays(days);
-  }, [currentYear, displayedMonth, userEvents]);
+    if (displayedMonth) {
+      const days = getDaysOfMonth({
+        year: displayedYear,
+        month: displayedMonth,
+        userEvents,
+      });
+      setAllDays(days);
+    }
+  }, [displayedYear, displayedMonth, userEvents]);
 
   const onHandleOpen = useCallback(
     ({ day: value, eventType, userEvent }: OnOpenCardProps) => {
@@ -203,7 +205,7 @@ export const MonthView = ({ userEvents }: { userEvents: UserEvent[] }) => {
   );
 
   const firstWeekDayOfMonth = getFirstWeekDayOfMonth(
-    currentYear,
+    displayedYear,
     displayedMonth
   );
 
