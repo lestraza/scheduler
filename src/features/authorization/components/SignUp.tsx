@@ -1,5 +1,5 @@
-import { Button, Stack, TextField, Typography } from "@mui/material";
 import { ChangeEvent, useState } from "react";
+import { Button, Stack, TextField, Typography } from "@mui/material";
 import { User } from "../../../shared/types";
 
 export type AuthFormState = {

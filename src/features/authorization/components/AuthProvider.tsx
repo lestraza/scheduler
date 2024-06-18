@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import { AuthContextType, User } from "../../../shared/types";
+import { AuthContextType, User} from "../../../shared/types";
 import { BASE_URL } from "../../../shared/constants/env";
 import { useLocation, Navigate } from "react-router-dom";
 

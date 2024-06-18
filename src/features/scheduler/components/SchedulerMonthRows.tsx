@@ -1,4 +1,4 @@
-import React, { ReactNode, useMemo, useRef } from "react";
+import React, { ReactNode, useEffect, useMemo, useRef } from "react";
 import { Stack, TableCell, TableRow } from "@mui/material";
 import { Day, EventType, UserEvent } from "../../../shared/types";
 import { eventSchema, numberOfDaysPerWeek } from "../../../shared/constants";
@@ -44,12 +44,18 @@ export const SchedulerMonthRows = React.memo(
   }: Props) => {
     const state = useRef(initialState);
 
+    useEffect(() => {
+      return () => {
+        state.current = initialState;
+      };
+    }, [days.length]);
+
     const allDays = useMemo(() => {
       [...new Array(numberOfDaysPerWeek)].forEach((_, index) => {
         if (index < firstWeekDayOfMonth) {
           state?.current?.week.push(
             <TableCell
-              key={index * 60}
+              key={(index + 3) * 60 * 0.7}
               sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}
             />
           );
@@ -67,6 +73,7 @@ export const SchedulerMonthRows = React.memo(
               className={className}
               id={item.date}
               day={item}
+              key={item.date}
               onClick={onBarClick}
               onSelectDay={onSelectDay}
               isSelecting={isSelecting}
@@ -124,7 +131,7 @@ export const SchedulerMonthRows = React.memo(
             ].forEach((_, i) => {
               state?.current?.week.push(
                 <TableCell
-                  key={index * i + 15}
+                  key={(i + 1.4) * 2.5}
                   sx={{
                     padding: "8px",
                     border: "1px solid rgba(224, 224, 224, 1)",
@@ -133,9 +140,10 @@ export const SchedulerMonthRows = React.memo(
               );
             });
 
+            const { numberOfWeek } = state.current;
             acc.push(
               <TableRow
-                key={state.current.numberOfWeek + item.date}
+                key={numberOfWeek + item.date}
                 sx={{
                   height: "150px",
                 }}
@@ -150,7 +158,7 @@ export const SchedulerMonthRows = React.memo(
         if (item.dayweekNumber + 1 === numberOfDaysPerWeek) {
           acc.push(
             <TableRow
-              key={state?.current?.week + item.date}
+              key={state?.current?.numberOfWeek + item.date}
               sx={{
                 "&:last-child th": { border: 0 },
                 height: "150px",

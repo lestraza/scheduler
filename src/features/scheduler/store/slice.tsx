@@ -3,6 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { getDaysOfYear } from "../../../shared/utils/date";
 import { YearsState } from "./types";
 import { CalendarView } from "../../../shared/types";
+import { getUserEvents } from "./thunks";
 
 const date = new Date();
 
@@ -14,6 +15,7 @@ const initialState: YearsState = {
   displayedMonth: date.getMonth(),
   calendarViewTab: CalendarView.Month,
   shouldUpdateData: true,
+  userEvents: [],
 };
 
 export const yearsSlice = createSlice({
@@ -42,6 +44,15 @@ export const yearsSlice = createSlice({
     ) => {
       state.shouldUpdateData = action.payload;
     },
+    clearUserEvents: (state: YearsState) => {
+      state.userEvents = [];
+    },
+  },
+  extraReducers: (builder) => {
+    // Add reducers for additional action types here, and handle loading state as needed
+    builder.addCase(getUserEvents.fulfilled, (state, { payload = [] }) => {
+      state.userEvents = payload;
+    });
   },
 });
 

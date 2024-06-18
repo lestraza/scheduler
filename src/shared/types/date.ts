@@ -9,13 +9,14 @@ export type Holiday = {
 };
 
 export type UserEvent = {
-  id: string;
   name: string;
   date: string[];
   period: string;
   type: EventType;
-  color: string
+  color: string;
+  id?: string;
   description?: string;
+  user?: string;
 };
 
 export type Day = {
