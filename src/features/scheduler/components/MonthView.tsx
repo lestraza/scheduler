@@ -40,21 +40,18 @@ export const MonthView = ({ userEvents }: { userEvents: UserEvent[] }) => {
   const [isEdit, setIsEdit] = useState(false);
   const { user } = useContext(AuthContext);
 
-  const { displayedYear, displayedMonth, calendarViewTab, shouldUpdateData } = useAppSelector(
-    ({ yearsReducer }) => yearsReducer
-  );
+  const { displayedYear, displayedMonth, calendarViewTab, shouldUpdateData } =
+    useAppSelector(({ yearsReducer }) => yearsReducer);
   const { setShouldUpdateData } = yearsSlice.actions;
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (displayedMonth) {
-      const days = getDaysOfMonth({
-        year: displayedYear,
-        month: displayedMonth,
-        userEvents,
-      });
-      setAllDays(days);
-    }
+    const days = getDaysOfMonth({
+      year: displayedYear,
+      month: displayedMonth,
+      userEvents,
+    });
+    setAllDays(days);
   }, [displayedYear, displayedMonth, userEvents]);
 
   const onHandleOpen = useCallback(
