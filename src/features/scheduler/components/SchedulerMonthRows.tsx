@@ -64,9 +64,7 @@ export const SchedulerMonthRows = React.memo(
 
       return days?.reduce((acc: ReactNode[], item, index) => {
         if (item.dayweekNumber < numberOfDaysPerWeek) {
-          const onDayContainerClick = () => {
-            onOpen?.(item, EventType.Holiday);
-          };
+          const onDayContainerClick = () => onOpen?.(item, EventType.Holiday);
 
           state?.current?.week.push(
             <DayContainer
@@ -90,12 +88,12 @@ export const SchedulerMonthRows = React.memo(
                         (event) => event.type === EventType.Holiday
                       )?.color || ""
                     }
-                    onClick={() => {
-                      return onOpenCard?.({
+                    onClick={() =>
+                      onOpenCard?.({
                         day: item,
                         eventType: EventType.Holiday,
-                      });
-                    }}
+                      })
+                    }
                   />
                 </Stack>
               ) : null}
@@ -103,23 +101,21 @@ export const SchedulerMonthRows = React.memo(
               item.userEvents?.length &&
               onOpenCard ? (
                 <Stack sx={{ minWidth: "100%" }}>
-                  {item.userEvents.map((event) => {
-                    return (
-                      <Bar
-                        label={event.name}
-                        type={event.type}
-                        color={event.color}
-                        onClick={() =>
-                          onOpenCard?.({
-                            day: item,
-                            eventType: event.type,
-                            userEvent: event,
-                          })
-                        }
-                        key={event.created}
-                      />
-                    );
-                  })}
+                  {item.userEvents.map((event) => (
+                    <Bar
+                      label={event.name}
+                      type={event.type}
+                      color={event.color}
+                      onClick={() =>
+                        onOpenCard?.({
+                          day: item,
+                          eventType: event.type,
+                          userEvent: event,
+                        })
+                      }
+                      key={event.created}
+                    />
+                  ))}
                 </Stack>
               ) : null}
             </DayContainer>
