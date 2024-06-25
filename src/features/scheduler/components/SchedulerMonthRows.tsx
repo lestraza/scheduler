@@ -3,10 +3,10 @@ import { Stack, TableCell, TableRow } from "@mui/material";
 import { Day, EventType, UserEvent } from "../../../shared/types";
 import { eventSchema, numberOfDaysPerWeek } from "../../../shared/constants";
 import {
+  Bar,
   DayContainer,
   OnSelectDayProps,
-} from "../../../shared/components/day-container";
-import { Bar } from "../../../shared/components";
+} from "../../../shared/components";
 
 export type OnOpenCardProps = {
   day: Day;
@@ -64,17 +64,14 @@ export const SchedulerMonthRows = React.memo(
 
       return days?.reduce((acc: ReactNode[], item, index) => {
         if (item.dayweekNumber < numberOfDaysPerWeek) {
-          const onBarClick = () => {
-            onOpen?.(item, EventType.Holiday);
-          };
+          const onDayContainerClick = () => onOpen?.(item, EventType.Holiday);
 
           state?.current?.week.push(
             <DayContainer
               className={className}
-              id={item.date}
               day={item}
               key={item.date}
-              onClick={onBarClick}
+              onClick={onDayContainerClick}
               onSelectDay={onSelectDay}
               isSelecting={isSelecting}
             >
@@ -100,7 +97,9 @@ export const SchedulerMonthRows = React.memo(
                   />
                 </Stack>
               ) : null}
-              {className === "month" && item.userEvents?.length ? (
+              {className === "month" &&
+              item.userEvents?.length &&
+              onOpenCard ? (
                 <Stack sx={{ minWidth: "100%" }}>
                   {item.userEvents.map((event) => (
                     <Bar
@@ -114,7 +113,7 @@ export const SchedulerMonthRows = React.memo(
                           userEvent: event,
                         })
                       }
-                      key={item.date + event.name}
+                      key={event.created}
                     />
                   ))}
                 </Stack>
@@ -170,6 +169,7 @@ export const SchedulerMonthRows = React.memo(
           state.current.week = [];
           state.current.numberOfWeek += 1;
         }
+        state.current.numberOfWeek = 0;
         return acc;
       }, []);
     }, [

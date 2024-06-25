@@ -56,11 +56,11 @@ export const MonthView = ({ userEvents }: { userEvents: UserEvent[] }) => {
 
   const onHandleOpen = useCallback(
     ({ day: value, eventType, userEvent }: OnOpenCardProps) => {
-      setDay(value);
       if (day?.date === value.date) {
         setOpen(false);
       }
       if (day?.date !== value.date) {
+        setDay(value);
         setEventType(eventType);
         setOpen(true);
       }

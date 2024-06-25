@@ -18,7 +18,6 @@ export type OnSelectDayProps = {
 
 type DayContainerProps = {
   day?: Day;
-  id?: string;
   isColumn?: boolean;
   isSelecting?: boolean;
   onClick?: (day: Day) => void;
@@ -71,7 +70,6 @@ const CustomTableCell = styled(TableCell, {
 
 export const DayContainer = ({
   children,
-  id,
   day,
   isColumn = false,
   isSelecting = false,
@@ -79,7 +77,6 @@ export const DayContainer = ({
   onSelectDay,
   ...rest
 }: DayContainerProps) => {
-
   const onHandleSelectDay = (event: SyntheticEvent) => {
     event.stopPropagation();
     //console.log("🚀 ~ onHandleSelectDay ~ event:", (event.target as any).querySelector('div').innerText);

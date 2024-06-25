@@ -17,6 +17,7 @@ export type UserEvent = {
   id?: string;
   description?: string;
   user?: string;
+  created?: string
 };
 
 export type Day = {
