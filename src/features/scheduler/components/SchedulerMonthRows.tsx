@@ -3,10 +3,10 @@ import { Stack, TableCell, TableRow } from "@mui/material";
 import { Day, EventType, UserEvent } from "../../../shared/types";
 import { eventSchema, numberOfDaysPerWeek } from "../../../shared/constants";
 import {
+  Bar,
   DayContainer,
   OnSelectDayProps,
-} from "../../../shared/components/day-container";
-import { Bar } from "../../../shared/components";
+} from "../../../shared/components";
 
 export type OnOpenCardProps = {
   day: Day;
@@ -64,17 +64,16 @@ export const SchedulerMonthRows = React.memo(
 
       return days?.reduce((acc: ReactNode[], item, index) => {
         if (item.dayweekNumber < numberOfDaysPerWeek) {
-          const onBarClick = () => {
+          const onDayContainerClick = () => {
             onOpen?.(item, EventType.Holiday);
           };
 
           state?.current?.week.push(
             <DayContainer
               className={className}
-              id={item.date}
               day={item}
               key={item.date}
-              onClick={onBarClick}
+              onClick={onDayContainerClick}
               onSelectDay={onSelectDay}
               isSelecting={isSelecting}
             >
@@ -91,32 +90,36 @@ export const SchedulerMonthRows = React.memo(
                         (event) => event.type === EventType.Holiday
                       )?.color || ""
                     }
-                    onClick={() =>
-                      onOpenCard?.({
+                    onClick={() => {
+                      return onOpenCard?.({
                         day: item,
                         eventType: EventType.Holiday,
-                      })
-                    }
+                      });
+                    }}
                   />
                 </Stack>
               ) : null}
-              {className === "month" && item.userEvents?.length ? (
+              {className === "month" &&
+              item.userEvents?.length &&
+              onOpenCard ? (
                 <Stack sx={{ minWidth: "100%" }}>
-                  {item.userEvents.map((event) => (
-                    <Bar
-                      label={event.name}
-                      type={event.type}
-                      color={event.color}
-                      onClick={() =>
-                        onOpenCard?.({
-                          day: item,
-                          eventType: event.type,
-                          userEvent: event,
-                        })
-                      }
-                      key={item.date + event.name}
-                    />
-                  ))}
+                  {item.userEvents.map((event) => {
+                    return (
+                      <Bar
+                        label={event.name}
+                        type={event.type}
+                        color={event.color}
+                        onClick={() =>
+                          onOpenCard?.({
+                            day: item,
+                            eventType: event.type,
+                            userEvent: event,
+                          })
+                        }
+                        key={event.created}
+                      />
+                    );
+                  })}
                 </Stack>
               ) : null}
             </DayContainer>
@@ -170,6 +173,7 @@ export const SchedulerMonthRows = React.memo(
           state.current.week = [];
           state.current.numberOfWeek += 1;
         }
+        state.current.numberOfWeek = 0;
         return acc;
       }, []);
     }, [
