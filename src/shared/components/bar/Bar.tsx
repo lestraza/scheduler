@@ -40,9 +40,9 @@ export const Bar = ({ onClick, type, color, ...rest }: BarProps) => {
     <CustomChip
       onClick={onHandleOnClick}
       {...rest}
-      sx={{ backgroundColor: color, minWidth: '100%' }}
+      sx={{ backgroundColor: color, minWidth: "100%" }}
       icon={type === EventType.Task ? <TaskIcon /> : undefined}
-      variant="filled"
+      variant="outlined"
     />
   );
 };
