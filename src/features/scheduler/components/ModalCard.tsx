@@ -57,6 +57,7 @@ export const ModalCard = ({
             onSaveData={onSaveData!}
             userEvent={userEvent}
             onClose={onClose}
+            date={day?.date}
           />
         ) : null}
       </CardPopover>

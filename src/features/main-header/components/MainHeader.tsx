@@ -10,11 +10,12 @@ import {
 import styled from "@emotion/styled";
 import { Select, Header, Icon, ConfirmAlert } from "../../../shared/components";
 import { colors } from "../../../shared/styles";
-import { useAppSelector, yearsSlice } from "../../scheduler/store";
+import { yearsSlice } from "../../scheduler/store";
 import { CalendarView, IncrementDecrement } from "../../../shared/types";
 import { monthsList } from "../../../shared/constants";
 import { AuthContext } from "../../authorization/components";
 import { useToggle } from "../../../shared/hooks";
+import { useAppSelector } from "../../../store";
 
 const IconButton = styled(MUIIconButton)`
   min-width: 48px;
@@ -34,21 +35,30 @@ export const MainHeader = () => {
     dispatch(setCalendarViewTab(value as CalendarView));
   };
 
-  const onSetDisplayedMonth = useCallback((value: IncrementDecrement) => {
-    if (value === IncrementDecrement.Inc) {
-      const month = displayedMonth === 11 ? 0 : displayedMonth + 1;
-      dispatch(setDisplayedMonth(month));
-      if (month === 0) {
-        dispatch(setDispayedYear(displayedYear + 1));
+  const onSetDisplayedMonth = useCallback(
+    (value: IncrementDecrement) => {
+      if (value === IncrementDecrement.Inc) {
+        const month = displayedMonth === 11 ? 0 : displayedMonth + 1;
+        dispatch(setDisplayedMonth(month));
+        if (month === 0) {
+          dispatch(setDispayedYear(displayedYear + 1));
+        }
+      } else {
+        const month = displayedMonth === 0 ? 11 : displayedMonth - 1;
+        dispatch(setDisplayedMonth(month));
+        if (month === 11) {
+          dispatch(setDispayedYear(displayedYear - 1));
+        }
       }
-    } else {
-      const month = displayedMonth === 0 ? 11 : displayedMonth - 1;
-      dispatch(setDisplayedMonth(month));
-      if (month === 11) {
-        dispatch(setDispayedYear(displayedYear - 1));
-      }
-    }
-  },[dispatch, displayedMonth, displayedYear, setDispayedYear, setDisplayedMonth]);
+    },
+    [
+      dispatch,
+      displayedMonth,
+      displayedYear,
+      setDispayedYear,
+      setDisplayedMonth,
+    ]
+  );
 
   const onHandleLogout = () => {
     const token = localStorage.getItem("scheduler");

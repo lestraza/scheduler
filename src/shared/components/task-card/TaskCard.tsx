@@ -23,6 +23,7 @@ import { eventSchema, eventTypeList } from "../../constants";
 export type TaskCardProps = {
   onSaveData: (task: UserEvent) => void;
   onClose: () => void;
+  date: string;
   userEvent?: UserEvent;
 };
 
@@ -41,7 +42,7 @@ const options = createTimePeriodOptions().map((key) => {
   );
 });
 
-export const TaskCard = ({ userEvent, onSaveData, onClose }: TaskCardProps) => {
+export const TaskCard = ({ userEvent, date, onSaveData, onClose }: TaskCardProps) => {
   const { open, setOpen } = useToggle();
   const [type, setType] = useState(0);
   const [period, setPeriod] = useState("");
@@ -70,16 +71,17 @@ export const TaskCard = ({ userEvent, onSaveData, onClose }: TaskCardProps) => {
 
   const onHandleSave = () => {
     const task = {
-      id: v4(),
+      id: userEvent?.id || v4(),
       name: title,
       period,
       description,
-      date: [],
+      date: userEvent?.date || [date],
       type: eventTypeList[type] as EventType,
       color:
         eventSchema.find(
           (event) => event.type === (eventTypeList[type] as EventType)
         )?.color || "",
+      user: userEvent?.user,
     };
     onSaveData(task);
   };

@@ -1,4 +1,4 @@
-import { CalendarView, Year } from "../../../shared/types";
+import { CalendarView, UserEvent, Year } from "../../../shared/types";
 
 export interface YearsState {
   year: Year;
@@ -8,4 +8,5 @@ export interface YearsState {
   displayedMonth: number;
   calendarViewTab: CalendarView;
   shouldUpdateData: boolean
+  userEvents: UserEvent[]
 }
