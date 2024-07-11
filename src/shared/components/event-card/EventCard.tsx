@@ -1,3 +1,4 @@
+import styled from "@emotion/styled";
 import { IconButton, Stack, Typography, colors } from "@mui/material";
 import { Day, UserEvent } from "../../types";
 import { EventChip } from "../event-chip";
@@ -13,6 +14,11 @@ export type EventCardProps = {
   onHandleEdit: () => void;
   onHandleDelete: () => void;
 };
+
+const Image = styled.img`
+  width: 100%;
+  height: 100%;
+`;
 
 export const EventCard = ({
   day,
@@ -49,6 +55,11 @@ export const EventCard = ({
           {monthsList[date.getMonth()]}
         </Typography>
       </Stack>
+      {userEvent?.image_url ? (
+        <Stack>
+          <Image src={`${userEvent?.image_url}`} alt="event_image" />
+        </Stack>
+      ) : null}
       <Stack direction="row" alignItems="center">
         <NotesIcon fill={colors.grey[400]} />
         <Typography variant="body2" paddingLeft="8px">

@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  IconButton,
   MenuItem,
   Stack,
   Tab,
@@ -8,20 +9,19 @@ import {
   TextField,
   colors,
 } from "@mui/material";
-import { v4 } from "uuid";
 import { ReactComponent as ListIcon } from "../../../shared/icons/list.svg";
 import styled from "@emotion/styled";
 
 import { useToggle } from "../../hooks";
 import { Select } from "../select";
 import { createTimePeriodOptions } from "../../utils";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { EventType, UserEvent } from "../../types";
 import { Icon } from "../icon";
 import { eventSchema, eventTypeList } from "../../constants";
 
 export type TaskCardProps = {
-  onSaveData: (task: UserEvent) => void;
+  onSaveData: (data: FormData) => void;
   onClose: () => void;
   date: string;
   userEvent?: UserEvent;
@@ -34,6 +34,10 @@ const CustomStack = styled(Stack)`
   color: ${colors.grey[800]};
 `;
 
+const CustomInput = styled.input`
+  display: none;
+`;
+
 const options = createTimePeriodOptions().map((key) => {
   return (
     <MenuItem value={key} key={key}>
@@ -42,48 +46,77 @@ const options = createTimePeriodOptions().map((key) => {
   );
 });
 
-export const TaskCard = ({ userEvent, date, onSaveData, onClose }: TaskCardProps) => {
+type DefaultEventType = Pick<UserEvent, "description" | "name" | "period"> & {
+  file: File | null;
+  type: number;
+};
+
+const defaultEvent: DefaultEventType = {
+  type: 0,
+  period: "",
+  name: "",
+  description: "",
+  file: null,
+};
+
+export const TaskCard = ({
+  userEvent,
+  date,
+  onSaveData,
+  onClose,
+}: TaskCardProps) => {
   const { open, setOpen } = useToggle();
-  const [type, setType] = useState(0);
-  const [period, setPeriod] = useState("");
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [event, setEvent] = useState(defaultEvent);
 
   useEffect(() => {
     if (userEvent) {
-      setDescription(userEvent.description || "");
-      setPeriod(userEvent.period);
-      setTitle(userEvent.name);
       const index = eventSchema.findIndex(
         ({ type }) => type === userEvent.type
       );
-      setType(index);
+      setEvent((prev) => ({
+        ...prev,
+        description: userEvent.description,
+        period: userEvent.period,
+        name: userEvent.name,
+        type: index,
+      }));
       setOpen(true);
     }
   }, [setOpen, userEvent]);
 
-  const onHandleDescription = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDescription(event.target.value);
-  };
-  const onHandleTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(event.target.value);
+  const onHandleChange = (
+    event: ChangeEvent<HTMLInputElement>,
+    title: string
+  ) => {
+    setEvent((prev) => ({ ...prev, [title]: event.target.value }));
   };
 
-  const onHandleSave = () => {
-    const task = {
-      id: userEvent?.id || v4(),
-      name: title,
-      period,
-      description,
-      date: userEvent?.date || [date],
-      type: eventTypeList[type] as EventType,
-      color:
-        eventSchema.find(
-          (event) => event.type === (eventTypeList[type] as EventType)
-        )?.color || "",
-      user: userEvent?.user,
-    };
-    onSaveData(task);
+  const onHandleSave = async () => {
+    const formData = new FormData();
+    formData.append("name", event.name);
+    formData.append("description", event.description as string);
+    formData.append("period", event.period);
+    formData.append("type", eventTypeList[event.type].toString());
+    formData.append(
+      "color",
+      eventSchema.find(
+        (elem) => elem.type === (eventTypeList[event.type] as EventType)
+      )?.color || ""
+    );
+    if (event.file) {
+      formData.append("image_url", event.file, event.file.name);
+    }
+    if (userEvent?.id) {
+      formData.append("id", userEvent.id);
+    }
+    onSaveData(formData);
+  };
+
+  const onHandleUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files?.length === 1) {
+      setEvent((prev) => ({ ...prev, file: files[0] }));
+    }
   };
 
   return (
@@ -92,16 +125,18 @@ export const TaskCard = ({ userEvent, date, onSaveData, onClose }: TaskCardProps
         <TextField
           variant="standard"
           placeholder="Add title and time"
-          value={title}
-          onChange={onHandleTitle}
+          value={event["name"]}
+          onChange={(event: ChangeEvent<HTMLInputElement>) =>
+            onHandleChange(event, "name")
+          }
         />
       </Stack>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs value={type}>
+        <Tabs value={event["type"]}>
           {eventTypeList.map((item, index) => (
             <Tab
               label={item}
-              onClick={() => setType(index)}
+              onClick={() => setEvent((prev) => ({ ...prev, type: index }))}
               id={item}
               key={item}
             />
@@ -109,20 +144,37 @@ export const TaskCard = ({ userEvent, date, onSaveData, onClose }: TaskCardProps
         </Tabs>
       </Box>
       <CustomStack>
-        <Icon icon="Clock" fill={colors.grey[400]} />
-        {!open ? (
-          <Button sx={{ minWidth: "100px" }} onClick={() => setOpen(true)}>
-            Add time
-          </Button>
-        ) : (
-          <Select
-            minWidth={100}
-            onSelectOption={(value: string) => setPeriod(value)}
-            value={period}
-          >
-            {options}
-          </Select>
-        )}
+        <CustomStack>
+          <Icon icon="Clock" fill={colors.grey[400]} />
+          {!open ? (
+            <Button sx={{ minWidth: "100px" }} onClick={() => setOpen(true)}>
+              Add time
+            </Button>
+          ) : (
+            <Select
+              minWidth={100}
+              onSelectOption={(value: string) =>
+                setEvent((prev) => ({ ...prev, period: value }))
+              }
+              value={event.period}
+            >
+              {options}
+            </Select>
+          )}
+        </CustomStack>
+        <CustomStack>
+          <IconButton>
+            <label htmlFor="upload">
+              <Icon icon="Clip" />
+            </label>
+          </IconButton>
+          <CustomInput
+            type="file"
+            id="upload"
+            accept="image/*"
+            onChange={onHandleUpload}
+          />
+        </CustomStack>
       </CustomStack>
       <CustomStack>
         <ListIcon fill={colors.grey[400]} />
@@ -132,8 +184,10 @@ export const TaskCard = ({ userEvent, date, onSaveData, onClose }: TaskCardProps
             multiline
             maxRows={10}
             variant="filled"
-            onChange={onHandleDescription}
-            value={description}
+            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+              onHandleChange(event, "description")
+            }
+            value={event.description}
           />
         </Stack>
       </CustomStack>

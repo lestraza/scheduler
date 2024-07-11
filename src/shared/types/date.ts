@@ -17,7 +17,8 @@ export type UserEvent = {
   id?: string;
   description?: string;
   user?: string;
-  created?: string
+  created?: string;
+  image_url?: string;
 };
 
 export type Day = {

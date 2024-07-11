@@ -7,12 +7,11 @@ export class API {
     "Content-Type": "application/json; charset=UTF-8",
   };
 
-  static saveEvent = async (event: UserEvent) => {
+  static saveEvent = async (data: FormData) => {
     try {
       const res = await fetch(BASE_URL + "save_event", {
         method: "POST",
-        headers: this.headers,
-        body: JSON.stringify(event),
+        body: data,
       });
       if (res.ok) {
         return true;
@@ -22,12 +21,11 @@ export class API {
     }
   };
 
-  static updateEvent = async (event: UserEvent) => {
+  static updateEvent = async (event: FormData) => {
     try {
-      const res = await fetch(BASE_URL + "event/" + event.id, {
+      const res = await fetch(BASE_URL + "event/" + event.get("id"), {
         method: "PUT",
-        headers: this.headers,
-        body: JSON.stringify(event),
+        body: event,
       });
       if (res.ok) {
         return true;

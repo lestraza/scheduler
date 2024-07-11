@@ -1,14 +1,7 @@
 export enum IncrementDecrement {
-  Inc = "cnc",
+  Inc = "Inc",
   Dec = "Dec",
 }
-
-// export enum EventType {
-//   Event = "#26c6da",
-//   Task = "#9575cd",
-//   Holiday = "#66bb6a",
-//   DayOff = "#ffd54f",
-// }
 
 export enum EventType {
   Event = "Event",

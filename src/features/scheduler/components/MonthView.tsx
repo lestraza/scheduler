@@ -68,7 +68,8 @@ export const MonthView = ({ userEvents }: { userEvents: UserEvent[] }) => {
         setUserEvent(userEvent);
       }
     },
-    [day, setOpen]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [day]
   );
 
   const onHandleEdit = () => {
@@ -170,14 +171,14 @@ export const MonthView = ({ userEvents }: { userEvents: UserEvent[] }) => {
   }, [dispatch, onHandleClose, setShouldUpdateData, userEvent]);
 
   const onSaveData = useCallback(
-    async (data: UserEvent) => {
+    async (data: FormData) => {
       let res: unknown;
+      data.set("date", `${state.current.dates}`);
+      data.set("user", user?.id || "");
       if (isEdit && userEvent) {
         res = await API.updateEvent(data);
       }
       if (eventType && user && !isEdit) {
-        data.date = state.current.dates;
-        data.user = user.id;
         res = await API.saveEvent(data);
       }
       if (res) {

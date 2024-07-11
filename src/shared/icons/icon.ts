@@ -10,6 +10,7 @@ import { ReactComponent as ChevronLeft } from "./chevron_left.svg";
 import { ReactComponent as ChevronRight } from "./chevron_right.svg";
 import { ReactComponent as Edit } from "./edit.svg";
 import { ReactComponent as Delete } from "./delete.svg";
+import { ReactComponent as Clip } from "./clip.svg";
 
 export const icons = {
   List,
@@ -23,5 +24,6 @@ export const icons = {
   ChevronLeft,
   ChevronRight,
   Edit,
-  Delete
+  Delete,
+  Clip,
 };
